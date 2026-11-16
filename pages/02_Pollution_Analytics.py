@@ -19,10 +19,12 @@ from src.visualization.charts import (
 )
 
 from src.visualization.theme import apply_theme
+from src.data.bootstrap import ensure_ready
 
 st.set_page_config(page_title="Analytics — AeroSense AI", page_icon="📈", layout="wide")
 
 apply_theme()
+ensure_ready()
 
 st.title("📈 Pollution Analytics")
 st.caption("Statistical, temporal, spatial, and correlation analysis of collected data.")
@@ -56,10 +58,11 @@ with st.sidebar:
 if not df.empty and "datetime_utc" in df.columns:
     df["datetime_utc"] = pd.to_datetime(df["datetime_utc"], utc=True, errors="coerce")
     df = df.dropna(subset=["datetime_utc", "value"])
-    df["hour"]   = df["datetime_utc"].dt.hour
-    df["day"]    = df["datetime_utc"].dt.day_name()
-    df["month"]  = df["datetime_utc"].dt.month_name()
-    df["date"]   = df["datetime_utc"].dt.date
+    df["hour"]        = df["datetime_utc"].dt.hour
+    df["day"]         = df["datetime_utc"].dt.day_name()
+    df["day_of_week"] = df["datetime_utc"].dt.dayofweek
+    df["month"]       = df["datetime_utc"].dt.month_name()
+    df["date"]        = df["datetime_utc"].dt.date
 
 if df.empty:
     st.markdown("""
@@ -147,22 +150,24 @@ with tab2:
 # Spatial
 with tab3:
     st.markdown('<div class="section-header">Spatial Comparison</div>', unsafe_allow_html=True)
-    if "city" in df.columns and df["city"].notna().any():
-        city_avg = df.groupby("city")["value"].agg(["mean","median","std","count"]).reset_index()
-        city_avg.columns = ["City", "Mean", "Median", "Std", "Count"]
-        city_avg = city_avg.sort_values("Mean", ascending=False)
-        st.dataframe(city_avg.round(2), use_container_width=True)
+    has_city = "city" in df.columns and (df["city"].fillna("").astype(str).str.strip() != "").any()
+    has_loc  = "location_name" in df.columns and (df["location_name"].fillna("").astype(str).str.strip() != "").any()
 
-        fig_city = bar_chart(city_avg.head(20), x_col="City", y_col="Mean",
-                              title="Top Cities by Average Concentration", y_label=PARAM_LABEL)
-        st.plotly_chart(fig_city, use_container_width=True)
-    elif "location_name" in df.columns:
-        loc_avg = df.groupby("location_name")["value"].mean().reset_index()
-        loc_avg.columns = ["Station", "Mean"]
-        loc_avg = loc_avg.sort_values("Mean", ascending=False).head(20)
-        fig_loc = bar_chart(loc_avg, x_col="Station", y_col="Mean",
-                             title="Top Stations by Average Concentration", y_label=PARAM_LABEL)
-        st.plotly_chart(fig_loc, use_container_width=True)
+    if has_city or has_loc:
+        group_col   = "city" if has_city else "location_name"
+        entity_lbl  = "City" if has_city else "Station"
+        chart_title = f"Top {entity_lbl}s by Average Concentration"
+        spatial_df  = df[df[group_col].fillna("").astype(str).str.strip() != ""]
+        spatial_avg = spatial_df.groupby(group_col)["value"].agg(["mean", "median", "std", "count"]).reset_index()
+        spatial_avg.columns = [entity_lbl, "Mean", "Median", "Std", "Count"]
+        spatial_avg = spatial_avg.sort_values("Mean", ascending=False)
+        st.dataframe(spatial_avg.round(2), use_container_width=True, hide_index=True)
+
+        fig_spatial = bar_chart(
+            spatial_avg.head(20), x_col=entity_lbl, y_col="Mean",
+            title=chart_title, y_label=PARAM_LABEL,
+        )
+        st.plotly_chart(fig_spatial, use_container_width=True)
     else:
         st.info("No city/location data available for spatial comparison.")
 

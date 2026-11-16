@@ -18,10 +18,12 @@ from src.aqi.us_epa import calculate_us_epa_aqi
 from src.visualization.charts import PLOTLY_TEMPLATE, PALETTE
 
 from src.visualization.theme import apply_theme
+from src.data.bootstrap import ensure_ready
 
 st.set_page_config(page_title="Health Advisory — AeroSense AI", page_icon="🏥", layout="wide")
 
 apply_theme()
+ensure_ready()
 
 st.title("🏥 Public Health Risk & Advisory Engine")
 st.caption("Epidemiological health exposure risk assessment, WHO 2021 compliance audits, and vulnerable group guidance.")

@@ -17,10 +17,12 @@ from src.data.storage import load_processed, list_processed_files
 from src.visualization.charts import map_scatter, PLOTLY_TEMPLATE, PALETTE
 
 from src.visualization.theme import apply_theme
+from src.data.bootstrap import ensure_ready
 
 st.set_page_config(page_title="Spatial Analysis — AeroSense AI", page_icon="🗺️", layout="wide")
 
 apply_theme()
+ensure_ready()
 
 st.title("🗺️ Spatial & Hotspot Analysis")
 st.caption("Identify geographic pollution clusters, spatial dispersion, and regional severity across monitoring stations.")
@@ -54,15 +56,95 @@ INDIAN_STATIONS = pd.DataFrame([
     {"location_name": "Chennai (Alandur)", "city": "Chennai", "latitude": 13.0030, "longitude": 80.2010, "region": "Southern / Coastal", "base_pm25": 42.0},
 ])
 
+# Region inference and comparison helpers
+def _infer_region(row: pd.Series) -> str:
+    """Assign geographic zone from coordinates/city when region metadata is absent."""
+    existing = str(row.get("region", "") or "").strip()
+    if existing:
+        return existing
+    lat = row.get("latitude")
+    lon = row.get("longitude")
+    if pd.isna(lat) or pd.isna(lon):
+        return "Unspecified Zone"
+    if 6.0 <= lat <= 37.5 and 68.0 <= lon <= 97.5:
+        if lat >= 24.5 and 74.0 <= lon <= 88.5:
+            return "Indo-Gangetic Plain"
+        if lon >= 86.0 and lat >= 19.0:
+            return "Eastern / Coastal"
+        if lon <= 74.5 and lat <= 24.5:
+            return "Western / Coastal"
+        if lat <= 15.5 and lon >= 79.5:
+            return "Southern / Coastal"
+        if lat <= 20.5:
+            return "Deccan / Peninsular"
+        return "Northern / Central India"
+    return "International"
+
+
+def _build_comparison_grid(base_df: pd.DataFrame, active_name: str | None) -> tuple[pd.DataFrame, bool]:
+    """Ensure multi-station coverage for regional contrasts and distance matrix."""
+    station_cols = ["location_name", "latitude", "longitude", "region"]
+    work = base_df.copy()
+    if "region" not in work.columns:
+        work["region"] = work.apply(_infer_region, axis=1)
+    if "location_name" not in work.columns:
+        work["location_name"] = work.get("city", pd.Series(["Active Station"] * len(work)))
+
+    station_rows = (
+        work.groupby(["location_name", "latitude", "longitude", "region"], as_index=False)["value"]
+        .mean()
+    )
+    if len(station_rows) >= 2 and station_rows["region"].nunique() >= 2:
+        return station_rows, False
+
+    extra_frames = [station_rows]
+    seen_coords = {
+        (round(float(r["latitude"]), 2), round(float(r["longitude"]), 2))
+        for _, r in station_rows.iterrows()
+    }
+    for p in list_processed_files():
+        if active_name and p.stem == active_name:
+            continue
+        other = load_processed(p.stem)
+        if other is None or other.empty or not {"latitude", "longitude", "value"}.issubset(other.columns):
+            continue
+        other = other.dropna(subset=["latitude", "longitude", "value"]).copy()
+        if "region" not in other.columns:
+            other["region"] = other.apply(_infer_region, axis=1)
+        if "location_name" not in other.columns:
+            other["location_name"] = p.stem
+        grouped = other.groupby(["location_name", "latitude", "longitude", "region"], as_index=False)["value"].mean()
+        extra_frames.append(grouped)
+        for _, r in grouped.iterrows():
+            seen_coords.add((round(float(r["latitude"]), 2), round(float(r["longitude"]), 2)))
+
+    ref = INDIAN_STATIONS.copy()
+    ref["value"] = ref["base_pm25"]
+    ref = ref[station_cols + ["value"]]
+    ref_filtered = ref[
+        ~ref.apply(
+            lambda r: (round(float(r["latitude"]), 2), round(float(r["longitude"]), 2)) in seen_coords,
+            axis=1,
+        )
+    ]
+    combined = pd.concat(extra_frames + [ref_filtered], ignore_index=True)
+    combined = combined.drop_duplicates(subset=["location_name"]).reset_index(drop=True)
+    return combined, True
+
+
 # Spatial Dataset resolution
 if df is not None and not df.empty and "latitude" in df.columns and "longitude" in df.columns and df["latitude"].notnull().any():
     spatial_df = df.dropna(subset=["latitude", "longitude", "value"]).copy()
+    if "region" not in spatial_df.columns:
+        spatial_df["region"] = spatial_df.apply(_infer_region, axis=1)
     has_custom_geo = True
 else:
     spatial_df = INDIAN_STATIONS.copy()
     spatial_df["value"] = spatial_df["base_pm25"]
     has_custom_geo = False
     st.info("Displaying Indian National Monitoring Grid benchmark stations. Ingest geo-tagged data via Data Explorer to map custom stations.", icon="📍")
+
+comparison_df, used_grid_supplement = _build_comparison_grid(spatial_df, dataset_name)
 
 # KPI Summary
 st.markdown('<div class="section-header">📍 Spatial Distribution Overview</div>', unsafe_allow_html=True)
@@ -131,38 +213,41 @@ with tab1:
 
 with tab2:
     st.markdown('<div class="section-header">Geographical & Regional Contrast Analysis</div>', unsafe_allow_html=True)
-    if "region" in spatial_df.columns:
-        region_df = spatial_df.groupby("region")["value"].agg(["mean", "median", "min", "max", "count"]).reset_index()
-        st.dataframe(region_df.round(2), use_container_width=True, hide_index=True)
+    if used_grid_supplement:
+        st.caption("Supplemented single-station / narrow dataset with stored stations and the Indian National Reference Grid for multi-zone comparison.")
+    region_df = comparison_df.groupby("region")["value"].agg(["mean", "median", "min", "max", "count"]).reset_index()
+    region_df = region_df.rename(columns={"count": "stations"})
+    st.dataframe(region_df.round(2), use_container_width=True, hide_index=True)
 
-        fig_box = px.box(
-            spatial_df,
-            x="region",
-            y="value",
-            color="region",
-            title="Pollutant Distribution by Indian Geographic Zone",
-            template=PLOTLY_TEMPLATE,
-            points="all",
-        )
-        fig_box.update_layout(paper_bgcolor="#0D1117", plot_bgcolor="#161B22", font=dict(color="#E6EDF3"), showlegend=False)
-        st.plotly_chart(fig_box, use_container_width=True)
-    else:
-        st.info("Regional categorical tags are available for Indian reference grids.")
+    fig_box = px.box(
+        comparison_df,
+        x="region",
+        y="value",
+        color="region",
+        title="Station-Mean Pollutant Distribution by Geographic Zone",
+        template=PLOTLY_TEMPLATE,
+        points="all" if len(comparison_df) <= 50 else "outliers",
+        hover_data=["location_name"],
+    )
+    fig_box.update_layout(paper_bgcolor="#0D1117", plot_bgcolor="#161B22", font=dict(color="#E6EDF3"), showlegend=False)
+    st.plotly_chart(fig_box, use_container_width=True)
 
 with tab3:
     st.markdown('<div class="section-header">Geodesic Proximity Matrix</div>', unsafe_allow_html=True)
+    if used_grid_supplement:
+        st.caption("Includes stored stations and Indian National Reference Grid nodes so inter-station distances remain multi-point.")
     # Haversine distance calculator
     def haversine_np(lat1, lon1, lat2, lon2):
         r = 6371.0 # km
         phi1 = np.radians(lat1)
         phi2 = np.radians(lat2)
-        delta_phi = np.radians(lat2 - phi1)
+        delta_phi = phi2 - phi1
         delta_lambda = np.radians(lon2 - lon1)
         a = np.sin(delta_phi / 2)**2 + np.cos(phi1) * np.cos(phi2) * np.sin(delta_lambda / 2)**2
         res = 2 * r * np.arcsin(np.sqrt(np.clip(a, 0, 1)))
         return res
 
-    sample_pts = spatial_df.drop_duplicates(subset=["latitude", "longitude"]).head(8)
+    sample_pts = comparison_df.drop_duplicates(subset=["latitude", "longitude"]).head(8)
     names = sample_pts["location_name" if "location_name" in sample_pts.columns else "city"].tolist()
     lats = sample_pts["latitude"].values
     lons = sample_pts["longitude"].values

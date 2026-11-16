@@ -20,10 +20,12 @@ from src.data.storage import save_processed, load_processed, list_processed_file
 from src.visualization.charts import time_series_chart, map_scatter
 
 from src.visualization.theme import apply_theme
+from src.data.bootstrap import ensure_ready
 
 st.set_page_config(page_title="Data Explorer — AeroSense AI", page_icon="🌐", layout="wide")
 
 apply_theme()
+ensure_ready()
 
 st.title("🌐 Global Data Explorer")
 st.caption("Fetch real-time and historical measurements from OpenAQ API v3, or inspect stored datasets.")

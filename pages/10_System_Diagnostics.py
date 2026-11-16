@@ -16,10 +16,12 @@ from src.config import settings
 from src.api.openaq_client import OpenAQClient
 
 from src.visualization.theme import apply_theme
+from src.data.bootstrap import ensure_ready
 
 st.set_page_config(page_title="System Diagnostics — AeroSense AI", page_icon="🛠️", layout="wide")
 
 apply_theme()
+ensure_ready()
 
 st.title("🛠️ System Diagnostics & Settings")
 st.caption("Configure OpenAQ v3 API credentials, verify live connectivity, inspect hardware, and monitor runtime telemetry.")

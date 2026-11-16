@@ -21,10 +21,12 @@ from src.reporting.report_generator import (
 )
 
 from src.visualization.theme import apply_theme
+from src.data.bootstrap import ensure_ready
 
 st.set_page_config(page_title="Research Reports — AeroSense AI", page_icon="📑", layout="wide")
 
 apply_theme()
+ensure_ready()
 
 st.title("📑 Academic Research & Technical Reports")
 st.caption("Generate formal B.Tech research reports, data provenance ledgers, and verifiable reproducibility archives.")

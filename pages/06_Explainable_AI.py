@@ -21,9 +21,11 @@ from src.explainability.feature_importance import (
 from src.visualization.charts import feature_importance_bar, residual_plot, PLOTLY_TEMPLATE
 
 from src.visualization.theme import apply_theme
+from src.data.bootstrap import ensure_ready
 
 st.set_page_config(page_title="Explainable AI — AeroSense AI", page_icon="🧠", layout="wide")
 apply_theme()
+ensure_ready()
 
 st.title("🧠 Explainable AI")
 st.caption("Feature importance, SHAP explanations, and residual analysis for trained models.")

@@ -13,9 +13,11 @@ import plotly.express as px
 from src.config import settings
 
 from src.visualization.theme import apply_theme
+from src.data.bootstrap import ensure_ready
 
 st.set_page_config(page_title="Benchmarking — AeroSense AI", page_icon="📊", layout="wide")
 apply_theme()
+ensure_ready()
 
 st.title("📊 Model Benchmarking")
 st.caption("Compare trained ML and DL models using held-out test split evaluation metrics.")
@@ -28,21 +30,14 @@ dl_dir = settings.DL_MODELS_DIR
 ml_artifacts = sorted(ml_dir.glob("*.pkl"))
 dl_artifacts = sorted(dl_dir.glob("*.pt"))
 
-if not ml_artifacts and not dl_artifacts:
-    st.markdown("""
-<div style="text-align:center; padding:4rem 0; color:#8B949E;">
-  <div style="font-size:3rem">📊</div>
-  <div style="font-size:1.1rem">No trained models yet.</div>
-  <div style="font-size:.85rem; margin-top:.5rem;">Go to <strong>Forecasting Studio</strong> to train models first.</div>
-</div>""", unsafe_allow_html=True)
-    st.stop()
-
-# Collect ML metrics (session state first, else persisted .pkl / CSV metadata)
+# Collect ML metrics (session state first, else persisted .pkl, else benchmark CSV)
 ml_rows = []
+ml_source = "persisted artifacts"
 session_res = st.session_state.get("train_results")
 if session_res is not None and not session_res.empty:
     ml_bench_df = session_res.copy()
     ml_bench_df["Family"] = "ML"
+    ml_source = "active session"
 else:
     for path in ml_artifacts:
         try:
@@ -66,8 +61,19 @@ else:
             pass
     ml_bench_df = pd.DataFrame(ml_rows)
 
-# Collect DL metrics from checkpoints
+if ml_bench_df.empty:
+    ml_csv = settings.PROJECT_ROOT / "experiments" / "results" / "ml_benchmark_results.csv"
+    if ml_csv.exists():
+        try:
+            ml_bench_df = pd.read_csv(ml_csv)
+            ml_bench_df["Family"] = "ML"
+            ml_source = "recorded benchmark CSV"
+        except Exception:
+            pass
+
+# Collect DL metrics (live checkpoints first, else benchmark CSV)
 dl_rows = []
+dl_source = "live checkpoints"
 for path in dl_artifacts:
     try:
         import torch
@@ -87,13 +93,42 @@ for path in dl_artifacts:
         pass
 dl_bench_df = pd.DataFrame(dl_rows)
 
+if dl_bench_df.empty:
+    dl_csv = settings.PROJECT_ROOT / "experiments" / "results" / "dl_h1_benchmark.csv"
+    if dl_csv.exists():
+        try:
+            raw_dl = pd.read_csv(dl_csv)
+            dl_bench_df = pd.DataFrame({
+                "model": raw_dl["model"],
+                "Family": "DL",
+                "Horizon": raw_dl.get("horizon", 1),
+                "test_MAE": raw_dl["MAE"],
+                "test_RMSE": raw_dl["RMSE"],
+                "test_R2": raw_dl["R2"],
+                "train_time_s": raw_dl.get("train_time_s"),
+            })
+            dl_source = "recorded h=1 benchmark CSV"
+        except Exception:
+            pass
+
+if ml_bench_df.empty and dl_bench_df.empty:
+    st.markdown("""
+<div style="text-align:center; padding:4rem 0; color:#8B949E;">
+  <div style="font-size:3rem">📊</div>
+  <div style="font-size:1.1rem">No trained models yet.</div>
+  <div style="font-size:.85rem; margin-top:.5rem;">Go to <strong>Forecasting Studio</strong> to train models first.</div>
+</div>""", unsafe_allow_html=True)
+    st.stop()
+
+st.caption(f"Sources loaded — **ML**: {ml_source} ({len(ml_bench_df)} model(s)) | **DL**: {dl_source} ({len(dl_bench_df)} model(s)).")
+
 # Unified leaderboard
 combined_cols = ["model", "Family", "test_MAE", "test_RMSE", "test_R2"]
 frames = []
 if not ml_bench_df.empty and "test_MAE" in ml_bench_df.columns and ml_bench_df["test_MAE"].notna().any():
     frames.append(ml_bench_df[[c for c in ["model", "Family", "val_MAE", "test_MAE", "test_RMSE", "test_R2", "train_time_s"] if c in ml_bench_df.columns]])
 if not dl_bench_df.empty and "test_MAE" in dl_bench_df.columns and dl_bench_df["test_MAE"].notna().any():
-    frames.append(dl_bench_df[[c for c in ["model", "Family", "test_MAE", "test_RMSE", "test_R2", "Lookback", "Horizon"] if c in dl_bench_df.columns]])
+    frames.append(dl_bench_df[[c for c in ["model", "Family", "test_MAE", "test_RMSE", "test_R2", "Lookback", "Horizon", "train_time_s"] if c in dl_bench_df.columns]])
 
 st.markdown('<div class="section-header">🏆 Unified Model Leaderboard</div>', unsafe_allow_html=True)
 

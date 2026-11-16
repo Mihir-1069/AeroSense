@@ -18,10 +18,12 @@ from src.ml.baselines import evaluate_baselines
 from src.visualization.charts import forecast_chart, loss_curves
 
 from src.visualization.theme import apply_theme
+from src.data.bootstrap import ensure_ready
 
 st.set_page_config(page_title="Forecasting Studio — AeroSense AI", page_icon="🔮", layout="wide")
 
 apply_theme()
+ensure_ready()
 
 st.title("🔮 Forecasting Studio")
 st.caption("Train traditional ML and deep learning models on collected air quality data.")
@@ -135,27 +137,56 @@ if train_btn:
         st.session_state.dl_result = all_dl_results
         st.session_state.train_results = None
 
-# Results display
-if st.session_state.train_results is not None:
+def _load_persisted_ml_results() -> pd.DataFrame | None:
+    """Build ML benchmark table from persisted .pkl model artifacts."""
+    rows = []
+    for path in sorted(settings.ML_MODELS_DIR.glob("*.pkl")):
+        d = load_model(path.stem)
+        if not d:
+            continue
+        tm = d.get("test_metrics", {})
+        vm = d.get("val_metrics", {})
+        if not tm:
+            continue
+        rows.append({
+            "model": path.stem,
+            "val_MAE": vm.get("MAE"),
+            "val_RMSE": vm.get("RMSE"),
+            "val_R2": vm.get("R2"),
+            "test_MAE": tm.get("MAE"),
+            "test_RMSE": tm.get("RMSE"),
+            "test_R2": tm.get("R2"),
+            "train_time_s": d.get("train_time_s"),
+        })
+    return pd.DataFrame(rows) if rows else None
+
+
+def _render_ml_results(res: pd.DataFrame, df_target: pd.DataFrame, is_persisted: bool = False) -> None:
+    """Display ML evaluation table, forecast preview chart, and baseline table."""
     st.markdown('<div class="section-header">📊 ML Results</div>', unsafe_allow_html=True)
-    res = st.session_state.train_results
+    if is_persisted:
+        st.info(
+            "Displaying forecasts from persisted ML models. Click **Train Models** in the sidebar "
+            "to re-train on this dataset or launch Deep Learning.",
+            icon="ℹ️",
+        )
 
     display_cols = [c for c in [
         "model", "val_MAE", "val_RMSE", "val_R2",
         "test_MAE", "test_RMSE", "test_R2", "train_time_s"
     ] if c in res.columns]
-    st.dataframe(res[display_cols].round(3), use_container_width=True)
+    st.dataframe(res[display_cols].round(3), use_container_width=True, hide_index=True)
 
     # Best model forecast preview
-    if "test_MAE" in res.columns:
+    if "test_MAE" in res.columns and res["test_MAE"].notna().any():
         best_model_name = res.loc[res["test_MAE"].idxmin(), "model"]
         st.markdown(f"**Best model by test MAE: `{best_model_name}`**")
         model_dict = load_model(best_model_name)
         if model_dict:
-            pred = ml_predict(model_dict, df)
-            n_test = max(10, int(len(df) * 0.15))
-            hist_df = df.iloc[:-n_test][["datetime_utc", "value"]]
-            test_df = df.iloc[-n_test:][["datetime_utc", "value"]]
+            pred = ml_predict(model_dict, df_target)
+            n_test = max(10, int(len(df_target) * 0.15))
+            hist_df = df_target.iloc[:-n_test][["datetime_utc", "value"]]
+            test_df = df_target.iloc[-n_test:][["datetime_utc", "value"]]
             fc_df = test_df.copy()
             fc_df["forecast"] = pred[-n_test:]
             fig = forecast_chart(
@@ -165,18 +196,23 @@ if st.session_state.train_results is not None:
             st.plotly_chart(fig, use_container_width=True)
 
     # Baselines
-    with st.expander("📐 Baseline Comparison"):
-        series_arr = df["value"].values
+    with st.expander("📐 Baseline Comparison", expanded=is_persisted):
+        series_arr = df_target["value"].values
         n = len(series_arr)
         train_arr = series_arr[:int(n * settings.TRAIN_RATIO)]
         test_arr  = series_arr[int(n * settings.TRAIN_RATIO):]
         baseline_df = evaluate_baselines(train_arr, test_arr)
         st.dataframe(baseline_df, use_container_width=True, hide_index=True)
 
+
+# Results display
+if st.session_state.train_results is not None:
+    _render_ml_results(st.session_state.train_results, df, is_persisted=False)
+
 elif st.session_state.dl_result:
     st.markdown('<div class="section-header">🧠 DL Results</div>', unsafe_allow_html=True)
     for res in st.session_state.dl_result:
-        with st.expander(f"🔬 {res['model_name']} (Device: {res['device']})"):
+        with st.expander(f"🔬 {res['model_name']} (Device: {res['device']})", expanded=True):
             m = res["metrics"]
             c1, c2, c3, c4 = st.columns(4)
             c1.metric("MAE",  f"{m['MAE']:.3f}")
@@ -187,12 +223,16 @@ elif st.session_state.dl_result:
             fig_loss = loss_curves(res["history"], title=f"{res['model_name']} Training Loss")
             st.plotly_chart(fig_loss, use_container_width=True)
 else:
-    st.markdown(
-        """
+    persisted_res = _load_persisted_ml_results()
+    if persisted_res is not None and not persisted_res.empty:
+        _render_ml_results(persisted_res, df, is_persisted=True)
+    else:
+        st.markdown(
+            """
 <div style="text-align:center; padding:3rem 0; color:#8B949E;">
   <div style="font-size:3rem">🔮</div>
   <div style="font-size:1.1rem">Configure training in the sidebar and click <strong>Train Models</strong>.</div>
   <div style="font-size:.85rem; margin-top:.5rem;">Training runs with real data only — no fabricated metrics.</div>
 </div>""",
-        unsafe_allow_html=True,
-    )
+            unsafe_allow_html=True,
+        )

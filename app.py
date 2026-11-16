@@ -13,6 +13,7 @@ if str(_ROOT) not in sys.path:
 import streamlit as st
 
 from src.config import settings
+from src.data.bootstrap import ensure_ready
 from src.utils.logging_config import setup_logging
 
 # Logging (do before any other import that might log)
@@ -34,6 +35,7 @@ st.set_page_config(
 )
 
 apply_theme()
+ensure_ready()
 
 # Sidebar branding
 with st.sidebar:

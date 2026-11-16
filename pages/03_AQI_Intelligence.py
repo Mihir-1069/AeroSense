@@ -16,10 +16,12 @@ from src.data.storage import load_processed, list_processed_files
 from src.visualization.charts import aqi_gauge, PLOTLY_TEMPLATE, AQI_COLORS
 
 from src.visualization.theme import apply_theme
+from src.data.bootstrap import ensure_ready
 
 st.set_page_config(page_title="AQI Intelligence — AeroSense AI", page_icon="🎯", layout="wide")
 
 apply_theme()
+ensure_ready()
 
 st.title("🎯 AQI Intelligence")
 st.caption("Calculate CPCB (India) and US EPA Air Quality Index from measured pollutant concentrations.")
@@ -27,7 +29,9 @@ st.caption("Calculate CPCB (India) and US EPA Air Quality Index from measured po
 # Manual input or from loaded data
 st.markdown('<div class="section-header">📥 Pollutant Input</div>', unsafe_allow_html=True)
 
-input_mode = st.radio("Input mode", ["Manual entry", "From loaded dataset"], horizontal=True)
+processed_files = list_processed_files()
+mode_options = ["From loaded dataset", "Manual entry"] if processed_files else ["Manual entry", "From loaded dataset"]
+input_mode = st.radio("Input mode", mode_options, horizontal=True)
 
 measurements: dict = {}
 
@@ -35,14 +39,14 @@ if input_mode == "Manual entry":
     st.markdown("Enter average concentrations. Leave at 0 to exclude a pollutant.")
     col1, col2, col3 = st.columns(3)
     with col1:
-        pm25 = st.number_input("PM2.5 (µg/m³, 24h avg)", 0.0, 1000.0, 0.0, step=0.5)
-        pm10 = st.number_input("PM10 (µg/m³, 24h avg)", 0.0, 2000.0, 0.0, step=1.0)
+        pm25 = st.number_input("PM2.5 (µg/m³, 24h avg)", 0.0, 1000.0, 65.0, step=0.5)
+        pm10 = st.number_input("PM10 (µg/m³, 24h avg)", 0.0, 2000.0, 110.0, step=1.0)
     with col2:
-        no2  = st.number_input("NO2 (µg/m³, 24h avg)", 0.0, 2000.0, 0.0, step=0.5)
-        so2  = st.number_input("SO2 (µg/m³, 24h avg)", 0.0, 2000.0, 0.0, step=0.5)
+        no2  = st.number_input("NO2 (µg/m³, 24h avg)", 0.0, 2000.0, 42.0, step=0.5)
+        so2  = st.number_input("SO2 (µg/m³, 24h avg)", 0.0, 2000.0, 18.0, step=0.5)
     with col3:
-        co   = st.number_input("CO (mg/m³, 8h avg)", 0.0, 50.0, 0.0, step=0.1)
-        o3   = st.number_input("O3 (µg/m³, 8h avg)", 0.0, 1000.0, 0.0, step=0.5)
+        co   = st.number_input("CO (mg/m³, 8h avg)", 0.0, 50.0, 1.1, step=0.1)
+        o3   = st.number_input("O3 (µg/m³, 8h avg)", 0.0, 1000.0, 48.0, step=0.5)
 
     if pm25 > 0: measurements["pm25"] = pm25
     if pm10 > 0: measurements["pm10"] = pm10
@@ -52,7 +56,6 @@ if input_mode == "Manual entry":
     if o3   > 0: measurements["o3"]   = o3
 
 else:
-    processed_files = list_processed_files()
     if processed_files:
         file_choice = st.selectbox("Select dataset", [f.stem for f in processed_files])
         df = load_processed(file_choice)
@@ -66,7 +69,8 @@ else:
                 recent = df
             avg_per_param = recent.groupby("parameter")["value"].mean()
             measurements = avg_per_param.to_dict()
-            st.success(f"Loaded {len(measurements)} pollutant(s) from dataset: {', '.join(measurements.keys())}")
+            summary_str = ", ".join(f"{k.upper()}: {v:.1f} µg/m³" for k, v in measurements.items())
+            st.success(f"Loaded latest 24h mean from `{file_choice}` → {summary_str}")
     else:
         st.info("No processed data found. Use **Data Explorer** first, or switch to Manual entry.")
 
