@@ -213,20 +213,31 @@ def map_scatter(
         fig.update_layout(title="No location data available", **_base_layout(height=height))
         return fig
 
-    fig = px.scatter_map(
-        df_clean,
-        lat=lat_col, lon=lon_col,
-        color=color_col,
-        hover_name=hover_col,
-        color_continuous_scale="YlOrRd",
-        title=title,
-        zoom=4,
-        height=height,
-    )
-    fig.update_layout(
-        mapbox_style="carto-darkmatter",
-        **_base_layout(height=height),
-    )
+    if hasattr(px, "scatter_map"):
+        fig = px.scatter_map(
+            df_clean,
+            lat=lat_col, lon=lon_col,
+            color=color_col,
+            hover_name=hover_col,
+            color_continuous_scale="YlOrRd",
+            title=title,
+            map_style="carto-darkmatter",
+            zoom=4,
+            height=height,
+        )
+    else:
+        fig = px.scatter_mapbox(
+            df_clean,
+            lat=lat_col, lon=lon_col,
+            color=color_col,
+            hover_name=hover_col,
+            color_continuous_scale="YlOrRd",
+            title=title,
+            mapbox_style="carto-darkmatter",
+            zoom=4,
+            height=height,
+        )
+    fig.update_layout(**_base_layout(height=height))
     return fig
 
 def feature_importance_bar(
