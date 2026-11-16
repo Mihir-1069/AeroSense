@@ -1,0 +1,51 @@
+# Secrets
+.env
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+.venv/
+venv/
+env/
+.Python
+
+# Data files (large)
+data/raw/*.parquet
+data/processed/*.parquet
+data/features/*.parquet
+data/exports/*
+
+# Models (large artifacts)
+models/ml/*.pkl
+models/dl/*.pt
+models/dl/*.pth
+
+# Cache & Testing
+.pytest_cache/
+
+# Logs
+logs/*.log
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Temporary report spreadsheets
+reports/*.xlsx

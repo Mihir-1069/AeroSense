@@ -1,0 +1,7 @@
+model,val_MAE,val_RMSE,val_R2,test_MAE,test_RMSE,test_R2,train_time_s,pred_time_s,n_features,train_rows,artifact
+LinearRegression,24.042,32.908,0.812,23.803,30.54,0.854,0.08,0.0,35,430,C:\Users\mihir\AppData\Local\Temp\tmpw6853i8v\LinearRegression.pkl
+Ridge,23.117,33.348,0.807,24.714,32.074,0.839,0.0,0.0,35,430,C:\Users\mihir\AppData\Local\Temp\tmpw6853i8v\Ridge.pkl
+RandomForest,24.102,34.735,0.791,26.534,35.573,0.802,0.1,0.03,35,430,C:\Users\mihir\AppData\Local\Temp\tmpw6853i8v\RandomForest.pkl
+ExtraTrees,31.115,42.387,0.688,31.829,41.481,0.731,0.07,0.03,35,430,C:\Users\mihir\AppData\Local\Temp\tmpw6853i8v\ExtraTrees.pkl
+HistGradientBoosting,30.921,41.948,0.695,32.799,40.471,0.744,1.61,0.0,35,430,C:\Users\mihir\AppData\Local\Temp\tmpw6853i8v\HistGradientBoosting.pkl
+XGBoost,26.336,37.753,0.753,33.479,42.794,0.714,0.36,0.0,35,430,C:\Users\mihir\AppData\Local\Temp\tmpw6853i8v\XGBoost.pkl

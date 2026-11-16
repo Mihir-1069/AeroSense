@@ -1,0 +1,7 @@
+model,val_MAE,val_RMSE,val_R2,test_MAE,test_RMSE,test_R2,train_time_s,pred_time_s,n_features,train_rows,artifact
+LinearRegression,9.505,11.931,0.928,9.449,11.947,0.906,0.03,0.0,35,1495,C:\Users\mihir\Desktop\AeroSense\models\ml\LinearRegression.pkl
+Ridge,9.516,11.95,0.928,9.457,11.948,0.906,0.0,0.0,35,1495,C:\Users\mihir\Desktop\AeroSense\models\ml\Ridge.pkl
+RandomForest,9.643,12.348,0.923,9.93,12.402,0.898,0.26,0.07,35,1495,C:\Users\mihir\Desktop\AeroSense\models\ml\RandomForest.pkl
+ExtraTrees,10.46,13.236,0.912,10.575,13.139,0.886,0.15,0.06,35,1495,C:\Users\mihir\Desktop\AeroSense\models\ml\ExtraTrees.pkl
+HistGradientBoosting,10.146,12.827,0.917,10.149,12.534,0.896,5.75,0.03,35,1495,C:\Users\mihir\Desktop\AeroSense\models\ml\HistGradientBoosting.pkl
+XGBoost,10.761,13.675,0.906,10.319,13.023,0.888,3.82,0.01,35,1495,C:\Users\mihir\Desktop\AeroSense\models\ml\XGBoost.pkl

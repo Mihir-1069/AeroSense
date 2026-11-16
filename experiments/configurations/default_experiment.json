@@ -1,0 +1,41 @@
+{
+  "project_name": "AeroSense: Intelligent Global Air Quality Monitoring, Analysis and Forecasting Using Machine Learning and Deep Learning",
+  "version": "1.0.0",
+  "default_geography": {
+    "country_iso": "IN",
+    "country_name": "India",
+    "default_pollutant": "pm25"
+  },
+  "data_pipeline": {
+    "provider": "OpenAQ API v3",
+    "outlier_filter": "IQR x 3 per (location_id, parameter)",
+    "imputation_strategy": "time_linear_interpolation",
+    "max_gap_hours": 6
+  },
+  "validation_split": {
+    "strategy": "strict_chronological",
+    "train_ratio": 0.70,
+    "val_ratio": 0.15,
+    "test_ratio": 0.15,
+    "random_state": 42
+  },
+  "ml_models": [
+    "LinearRegression",
+    "Ridge",
+    "RandomForest",
+    "ExtraTrees",
+    "HistGradientBoosting",
+    "XGBoost"
+  ],
+  "dl_models": {
+    "architectures": ["LSTM", "GRU", "TCN", "Transformer"],
+    "lookback_hours": 24,
+    "forecast_horizon_hours": 24,
+    "batch_size": 32,
+    "max_epochs": 100,
+    "early_stopping_patience": 10,
+    "learning_rate": 0.001,
+    "random_seed": 42
+  },
+  "aqi_standards": ["CPCB (India, 2014)", "US EPA (Revised 2012/2018)"]
+}
