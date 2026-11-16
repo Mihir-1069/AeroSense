@@ -119,7 +119,10 @@ def generate_markdown_report(
 
     md = []
     md.append(f"# 🌬️ AeroSense AI — Research & Project Technical Report")
-    md.append(f"**Project Title**: {settings.APP_TITLE}")
+    md.append(f"**Assigned Project Title**: Air Pollution Pattern Analysis and AQI Forecasting")
+    md.append(f"**Platform Title**: {settings.APP_TITLE}")
+    md.append(f"**Project Team (Batch 2023–2027, Sem 7, CSE-DS)**: Aryan Saini (23030173 / 2301315012), Ayaan Ali (23030175 / 2301315013), Kawalpreet Kaur (23030255 / 2301315019), Mihir Kumar (23030268 / 2301315022)")
+    md.append(f"**Faculty Assigned**: Mr. Abhishek Kumar (QU0125261068)")
     md.append(f"**Generated**: {now_str}")
     md.append(f"**Target Station / Region**: `{location_name}` | **Dataset**: `{dataset_name}`")
     md.append(f"**System Version**: v{settings.APP_VERSION} | **Phase**: India-First Architecture\n")
@@ -441,6 +444,11 @@ def generate_pdf_report(
     elements.append(Paragraph(f"AeroSense AI — Technical Research Report", title_style))
     elements.append(
         Paragraph(
+            "<b>Assigned Project Title</b>: Air Pollution Pattern Analysis and AQI Forecasting | "
+            "<b>Faculty Guide</b>: Mr. Abhishek Kumar (QU0125261068)<br/>"
+            "<b>Team (Batch 2023-2027, Sem 7, CSE-DS)</b>: Aryan Saini (23030173/2301315012), "
+            "Ayaan Ali (23030175/2301315013), Kawalpreet Kaur (23030255/2301315019), "
+            "Mihir Kumar (23030268/2301315022)<br/>"
             f"<b>Location</b>: {location_name} | <b>Dataset</b>: {dataset_name} | "
             f"<b>Date</b>: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}",
             body_style,

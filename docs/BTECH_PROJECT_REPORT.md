@@ -1,8 +1,20 @@
 # 🎓 Final-Year B.Tech Data Science Project Report
 
-**Title:** AeroSense: Intelligent Global Air Quality Monitoring, Analysis and Forecasting Using Machine Learning and Deep Learning  
+**Assigned Project Title:** Air Pollution Pattern Analysis and AQI Forecasting  
+**Institution:** Department of Computer Science & Engineering, Quantum School of Technology, Quantum University, Roorkee - 247167  
+**Full Platform Title:** AeroSense: Intelligent Global Air Quality Monitoring, Analysis and Forecasting Using Machine Learning and Deep Learning  
 **Application Name:** AeroSense AI  
-**Tagline:** *Understand Pollution. Predict Tomorrow. Build a Cleaner Future.*
+**Tagline:** *Understand Pollution. Predict Tomorrow. Build a Cleaner Future.*  
+**Batch / Current Semester / Branch:** `2023 - 2027` | Semester `7` | `CSE-DS`  
+**Faculty Assigned:** `Mr. Abhishek Kumar (QU0125261068)`
+
+### Project Group Members
+| Batch | Student ID | Name | Current Sem. | Branch | Roll No. | Primary Engineering Scope |
+| :---: | :---: | :--- | :---: | :---: | :---: | :--- |
+| 2023 - 2027 | 23030173 | **Aryan Saini** | 7 | CSE-DS | 2301315012 | Data Engineering, OpenAQ v3 API & Parquet Pipeline |
+| 2023 - 2027 | 23030175 | **Ayaan Ali** | 7 | CSE-DS | 2301315013 | Feature Synthesis, CPCB/EPA AQI Engine & Baselines |
+| 2023 - 2027 | 23030255 | **Kawalpreet Kaur** | 7 | CSE-DS | 2301315019 | ML/DL Model Architectures, Training & Benchmarking |
+| 2023 - 2027 | 23030268 | **Mihir Kumar** | 7 | CSE-DS | 2301315022 | SHAP Explainability, 10-Page Streamlit UI & Reporting |
 
 ---
 

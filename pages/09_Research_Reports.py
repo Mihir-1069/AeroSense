@@ -208,7 +208,7 @@ with col_cite:
 <div class="kpi-card">
   <div style="font-weight:600; color:#00D4FF; margin-bottom:0.4rem;">IEEE Academic Citation Format</div>
   <code style="font-size:0.78rem; display:block; padding:0.6rem; background:#0D1117; border-radius:6px; color:#E6EDF3;">
-    [1] AeroSense AI Research Group, "Global Air Pollution Pattern Analysis and AQI Forecasting Using Machine Learning and Deep Learning," B.Tech Thesis Technical Report, 2026. Data sourced from OpenAQ Community API v3.
+    [1] A. Saini, A. Ali, K. Kaur, and M. Kumar (Supervisor: Mr. Abhishek Kumar, QU0125261068), "Air Pollution Pattern Analysis and AQI Forecasting (AeroSense AI)," B.Tech CSE-DS (Batch 2023-2027, Sem 7) Technical Report, 2026.
   </code>
 </div>
 """, unsafe_allow_html=True)

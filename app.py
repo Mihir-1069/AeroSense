@@ -174,3 +174,30 @@ for i, (num, page, desc) in enumerate(steps):
 </div>""",
             unsafe_allow_html=True,
         )
+
+# Project Team & Faculty Supervision
+st.markdown('<div class="section-header">👨‍🎓 Project Team & Faculty Supervision</div>', unsafe_allow_html=True)
+st.caption(
+    "**Assigned Project Title:** Air Pollution Pattern Analysis and AQI Forecasting  |  "
+    "**Quantum University, Roorkee** (`CSE-DS`, Batch `2023 - 2027`, Sem `7`)  |  "
+    "**Faculty Assigned:** Mr. Abhishek Kumar (QU0125261068)"
+)
+team_members = [
+    ("Aryan Saini", "23030173", "2301315012", "Data Engineering, OpenAQ v3 & Parquet"),
+    ("Ayaan Ali", "23030175", "2301315013", "Feature Synthesis, AQI Engine & Baselines"),
+    ("Kawalpreet Kaur", "23030255", "2301315019", "ML & Deep Learning Benchmarking"),
+    ("Mihir Kumar", "23030268", "2301315022", "Explainable AI, UI & Research Reports"),
+]
+tcols = st.columns(4)
+for col, (name, sid, roll, role) in zip(tcols, team_members):
+    with col:
+        st.markdown(
+            f"""
+<div class="kpi-card" style="text-align:left; margin-bottom:0.8rem;">
+  <div style="font-weight:700; color:#00D4FF; font-size:0.95rem;">{name}</div>
+  <div style="font-size:0.76rem; color:#E6EDF3; margin:0.25rem 0;">ID: <code>{sid}</code> | Roll: <code>{roll}</code></div>
+  <div style="font-size:0.74rem; color:#8B949E;">2023 - 2027 · Sem 7 · CSE-DS</div>
+  <div style="font-size:0.74rem; color:#8B949E; margin-top:0.2rem;">{role}</div>
+</div>""",
+            unsafe_allow_html=True,
+        )

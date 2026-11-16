@@ -121,11 +121,25 @@ python -m pytest tests/ -v
 ---
 
 ## 📁 Academic Deliverables (`reports/`)
-All submission-ready project artifacts with **4-member group placeholders** are located in [reports/](reports/):
+All submission-ready project artifacts are populated with the official team & faculty metadata in [reports/](reports/):
+
+### 👨‍🎓 Project Team & Faculty Guide
+- **Project Title:** Air Pollution Pattern Analysis and AQI Forecasting *(AeroSense AI)*
+- **Institution:** Department of Computer Science & Engineering, Quantum School of Technology, Quantum University, Roorkee - 247167
+- **Batch / Current Semester / Branch:** `2023 - 2027` | Semester `7` | `CSE-DS`
+- **Faculty Assigned:** `Mr. Abhishek Kumar (QU0125261068)`
+
+| Batch | Student ID | Name | Current Sem. | Branch | Roll No. | Primary Engineering Ownership |
+| :---: | :---: | :--- | :---: | :---: | :---: | :--- |
+| 2023 - 2027 | 23030173 | **Aryan Saini** | 7 | CSE-DS | 2301315012 | Data Engineering, OpenAQ v3 API & Parquet Pipeline |
+| 2023 - 2027 | 23030175 | **Ayaan Ali** | 7 | CSE-DS | 2301315013 | Feature Synthesis, CPCB/EPA AQI Engine & Baselines |
+| 2023 - 2027 | 23030255 | **Kawalpreet Kaur** | 7 | CSE-DS | 2301315019 | ML/DL Model Architectures, Training & Benchmarking |
+| 2023 - 2027 | 23030268 | **Mihir Kumar** | 7 | CSE-DS | 2301315022 | SHAP Explainability, 10-Page Streamlit UI & Reporting |
+
 - **Project Synopsis**: [AeroSense_Project_Synopsis.pdf](reports/AeroSense_Project_Synopsis.pdf) | [Markdown](reports/AeroSense_Project_Synopsis.md)
 - **Presentation Deck (16 Slides)**: [AeroSense_Presentation.pptx](reports/AeroSense_Presentation.pptx)
 - **IEEE-Format Research Paper**: [AeroSense_Research_Paper.pdf](reports/AeroSense_Research_Paper.pdf) | [Markdown](reports/AeroSense_Research_Paper.md)
-- **Final-Year B.Tech Project Report**: [AeroSense_Final_Project_Report.pdf](reports/AeroSense_Final_Project_Report.pdf) | [Markdown](reports/AeroSense_Final_Project_Report.md)
+- **Final-Year B.Tech Project Report (Quantum University Format)**: [AeroSense_Final_Project_Report.pdf](reports/AeroSense_Final_Project_Report.pdf) | [Air_Pollution_Pattern_Analysis_and_AQI_Forecasting.pdf](reports/Air_Pollution_Pattern_Analysis_and_AQI_Forecasting.pdf) | [Markdown](reports/AeroSense_Final_Project_Report.md)
 
 ## 📚 Documentation
 - [System Architecture](docs/ARCHITECTURE.md)

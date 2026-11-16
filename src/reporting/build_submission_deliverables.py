@@ -41,25 +41,26 @@ REPORTS_DIR = settings.REPORTS_DIR
 FIG_DIR = REPORTS_DIR / "figures"
 REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 
-# Shared Team Placeholders
+# Shared Team & Faculty Metadata
 TEAM_MEMBERS = [
-    ["[Member 1 Full Name]", "[Roll No. / USN 1]", "[Email 1]", "Data Engineering, OpenAQ v3 API & Parquet Pipeline"],
-    ["[Member 2 Full Name]", "[Roll No. / USN 2]", "[Email 2]", "Feature Synthesis, CPCB/EPA AQI Engine & Baselines"],
-    ["[Member 3 Full Name]", "[Roll No. / USN 3]", "[Email 3]", "ML/DL Model Architectures, Training & Benchmarking"],
-    ["[Member 4 Full Name]", "[Roll No. / USN 4]", "[Email 4]", "SHAP Explainability, 10-Page Streamlit UI & Reporting"],
+    ["Aryan Saini", "ID: 23030173 | Roll: 2301315012", "2023 - 2027 | Sem 7 | CSE-DS", "Data Engineering, OpenAQ v3 API & Parquet Pipeline"],
+    ["Ayaan Ali", "ID: 23030175 | Roll: 2301315013", "2023 - 2027 | Sem 7 | CSE-DS", "Feature Synthesis, CPCB/EPA AQI Engine & Baselines"],
+    ["Kawalpreet Kaur", "ID: 23030255 | Roll: 2301315019", "2023 - 2027 | Sem 7 | CSE-DS", "ML/DL Model Architectures, Training & Benchmarking"],
+    ["Mihir Kumar", "ID: 23030268 | Roll: 2301315022", "2023 - 2027 | Sem 7 | CSE-DS", "SHAP Explainability, 10-Page Streamlit UI & Reporting"],
 ]
 
 INSTITUTE_META = {
-    "project_title": "AeroSense: Intelligent Global Air Quality Monitoring, Analysis and Forecasting Using Machine Learning and Deep Learning",
+    "project_title": "Air Pollution Pattern Analysis and AQI Forecasting (AeroSense AI: Global Air Pollution Pattern Analysis and AQI Forecasting Using Machine Learning and Deep Learning)",
+    "short_project_title": "Air Pollution Pattern Analysis and AQI Forecasting",
     "app_name": "AeroSense AI",
     "tagline": "Understand Pollution. Predict Tomorrow. Build a Cleaner Future.",
-    "degree": "[B.Tech in Computer Science & Engineering / Data Science]",
-    "department": "[Department Name Placeholder]",
-    "institute": "[University / Institute Name Placeholder]",
-    "city_state": "[City, State, India]",
-    "session": "[Academic Year 2025-2026]",
-    "guide": "[Prof. / Dr. Guide Name Placeholder, Designation]",
-    "hod": "[Prof. / Dr. HOD Name Placeholder, Head of Department]",
+    "degree": "B.Tech in Computer Science & Engineering (Data Science) [CSE-DS] — Semester 7",
+    "department": "Department of Computer Science and Engineering (CSE-DS)",
+    "institute": "Quantum School of Technology, Quantum University",
+    "city_state": "Roorkee - 247167, Uttarakhand, India",
+    "session": "Batch 2023 - 2027 | 7th Sem (Session: 2026-27)",
+    "guide": "Mr. Abhishek Kumar (QU0125261068)",
+    "hod": "HoD, CSE & Dean Academics, Quantum University",
 }
 
 # ReportLab Styling Helpers
@@ -156,137 +157,10 @@ def _footer_canvas(title_short: str):
         canvas.restoreState()
     return _draw
 
-# 1. PROJECT SYNOPSIS (PDF + MD)
+# 1. PROJECT SYNOPSIS (PDF + MD — Quantum University Format)
 def build_synopsis():
-    styles = _build_styles()
-    pdf_path = REPORTS_DIR / "AeroSense_Project_Synopsis.pdf"
-    md_path = REPORTS_DIR / "AeroSense_Project_Synopsis.md"
-
-    doc = SimpleDocTemplate(
-        str(pdf_path), pagesize=A4,
-        leftMargin=0.7 * inch, rightMargin=0.7 * inch,
-        topMargin=0.7 * inch, bottomMargin=0.7 * inch,
-    )
-    el = []
-
-    el.append(Paragraph(INSTITUTE_META["institute"].upper(), styles["CenterBold"]))
-    el.append(Paragraph(INSTITUTE_META["department"], styles["Center"]))
-    el.append(Spacer(1, 6))
-    el.append(Paragraph("PROJECT SYNOPSIS", styles["H1"]))
-    el.append(Paragraph(INSTITUTE_META["project_title"], styles["TitleHero"]))
-    el.append(Paragraph(f"Application: {INSTITUTE_META['app_name']} — \"{INSTITUTE_META['tagline']}\"", styles["SubHero"]))
-
-    el.append(Paragraph("Submitted in partial fulfillment of the requirements for the award of", styles["Center"]))
-    el.append(Paragraph(f"<b>{INSTITUTE_META['degree']}</b> | {INSTITUTE_META['session']}", styles["Center"]))
-    el.append(Spacer(1, 8))
-
-    el.append(Paragraph("Project Group Members (Group ID: [Group No. Placeholder])", styles["H2"]))
-    team_tbl = [["Member Name", "Roll No. / ID", "Email", "Primary Engineering Ownership"]] + TEAM_MEMBERS
-    el.append(_styled_table(team_tbl, [1.45 * inch, 1.15 * inch, 1.45 * inch, 2.75 * inch]))
-    el.append(Spacer(1, 8))
-    el.append(Paragraph(f"<b>Under the Supervision of:</b> {INSTITUTE_META['guide']}", styles["Body"]))
-    el.append(Paragraph(f"<b>Head of Department:</b> {INSTITUTE_META['hod']}", styles["Body"]))
-
-    el.append(Paragraph("1. Abstract", styles["H1"]))
-    el.append(Paragraph(
-        "Ambient fine particulate matter (PM2.5) is one of the most severe environmental health hazards across urban India and rapidly industrializing global centers. Existing air quality dashboards often rely solely on descriptive historical charts without transparent Air Quality Index (AQI) sub-index decomposition, leakage-free machine learning validation, or explainable diagnostics. AeroSense AI addresses this gap as an end-to-end, modular environmental intelligence platform integrating authenticated OpenAQ API v3 telemetry, Apache Parquet data engineering, dual Indian CPCB (2014) and US EPA AQI calculators, six traditional machine learning regressors (LinearRegression, Ridge, RandomForest, ExtraTrees, HistGradientBoosting, XGBoost), four PyTorch deep sequence architectures (LSTM, GRU, Temporal Convolutional Network, Transformer), SHAP interpretability, and automated academic reporting across a 10-page interactive Streamlit application.",
-        styles["Body"]
-    ))
-
-    el.append(Paragraph("2. Problem Statement & Motivation", styles["H1"]))
-    el.append(Paragraph(
-        "1) Fragmented Pipelines: Environmental monitoring and predictive modeling scripts typically lack unified validation, imputation provenance, and UI accessibility.<br/>"
-        "2) Temporal Leakage in Naive ML Studies: Applying randomized train/test splits to autocorrelated pollution series causes lookahead bias and unrealistic test metrics.<br/>"
-        "3) Incomplete-Panel AQI Misreporting: Monitoring stations rarely deploy sensors for all six criteria pollutants simultaneously; AeroSense AI explicitly tracks missing pollutants and surfaces partial-AQI disclosures.<br/>"
-        "4) Need for India-First, Globally Extensible Architecture: Empirical analysis of live OpenAQ v3 data over 30 days shows R K Puram (Delhi) averaging 177.81 µg/m³ (98.6% WHO breach rate) and Talkatora (Lucknow) averaging 85.64 µg/m³ (92.2% WHO breach rate), underscoring urgent operational forecasting needs.",
-        styles["Body"]
-    ))
-
-    el.append(Paragraph("3. Objectives", styles["H1"]))
-    for obj in [
-        "Build a resilient OpenAQ API v3 client supporting ISO country discovery, sensor-level hourly querying, exponential backoff, and Parquet provenance.",
-        "Implement reproducible validation (physical range enforcement, deduplication) and bounded temporal interpolation (is_imputed tracking).",
-        "Compute regulatory CPCB (India) and US EPA AQI values with dominant pollutant attribution and partial-panel flags.",
-        "Engineer leakage-free cyclical, lag, and shifted rolling time-series features and evaluate 3 naive baselines, 6 ML algorithms, and 4 PyTorch DL models under strict 70/15/15 chronological splits.",
-        "Provide SHAP feature explanations, public health WHO/NAAQS audits, interactive geospatial hotspot maps, and automated PDF/HTML/Markdown/ZIP reporting."
-    ]:
-        el.append(Paragraph(f"• {obj}", styles["Bullet"]))
-
-    el.append(Paragraph("4. Proposed System Architecture & Tech Stack", styles["H1"]))
-    el.append(Paragraph(
-        "AeroSense AI enforces strict separation of concerns across decoupled layers: External API (src/api/), Data Engineering (src/data/), Feature Store (src/features/), AQI Engine (src/aqi/), ML & DL Modeling (src/ml/, src/dl/), Explainability (src/explainability/), Reporting (src/reporting/), Visualization (src/visualization/), and a 10-page Streamlit UI (app.py + pages/).",
-        styles["Body"]
-    ))
-    stack_tbl = [
-        ["Layer", "Technologies & Libraries", "Key Design Choice"],
-        ["Frontend & UI", "Streamlit, Plotly 6.x, Custom Dark CSS", "10 decoupled multi-page views + responsive layout"],
-        ["Data API & Storage", "httpx, OpenAQ API v3, Pandas, PyArrow (Parquet)", "Snappy-compressed Parquet + explicit data provenance"],
-        ["Machine Learning", "Scikit-Learn, XGBoost, Joblib", "Chronological 70/15/15 split + saved metric artifacts"],
-        ["Deep Learning", "PyTorch 2.x (LSTM, GRU, TCN, Transformer)", "Sliding-window tensors, EarlyStopping, ReduceLROnPlateau"],
-        ["Explainability & QA", "SHAP, Permutation Importance, Pytest, AppTest", "Tree/Linear SHAP + 41 automated unit & UI tests"],
-        ["Reporting", "ReportLab, python-pptx, Matplotlib", "Automated PDF/HTML/MD/ZIP academic exports"],
-    ]
-    el.append(_styled_table(stack_tbl, [1.35 * inch, 2.55 * inch, 2.9 * inch]))
-
-    el.append(Paragraph("5. Preliminary Verified Outcomes", styles["H1"]))
-    el.append(Paragraph(
-        "On the 90-day Delhi Anand Vihar calibration series (n=2,161), 1-step LinearRegression achieved 9.449 µg/m³ MAE (R²=0.906) and PyTorch Transformer achieved 9.580 µg/m³ MAE (R²=0.903), vastly outperforming Persistence (40.117 MAE) and Seasonal Naive (30.966 MAE). On live OpenAQ v3 R K Puram (Delhi, n=639), LinearRegression achieved 23.803 µg/m³ MAE (R²=0.854) vs Seasonal Naive (55.515 MAE) — a 57.1% error reduction. All 41 automated tests pass.",
-        styles["Body"]
-    ))
-
-    el.append(Paragraph("6. Project Execution Plan & Team Role Matrix (16 Weeks)", styles["H1"]))
-    plan_tbl = [
-        ["Phase", "Timeline", "Deliverables", "Primary Owner"],
-        ["Phase 1: Requirements & API", "Weeks 1-3", "OpenAQ v3 client, settings, schema validation", "Member 1 & Member 2"],
-        ["Phase 2: Data & AQI Engine", "Weeks 4-6", "Parquet store, CPCB & US EPA calculators, cleaning", "Member 1 & Member 2"],
-        ["Phase 3: ML & DL Pipeline", "Weeks 7-10", "Feature matrix, 6 ML + 4 PyTorch DL architectures", "Member 2 & Member 3"],
-        ["Phase 4: XAI, UI & Reporting", "Weeks 11-14", "SHAP engine, 10 Streamlit pages, PDF/HTML export", "Member 3 & Member 4"],
-        ["Phase 5: Verification & Thesis", "Weeks 15-16", "41 pytest tests, browser QA, report & viva deck", "All 4 Members"],
-    ]
-    el.append(_styled_table(plan_tbl, [1.65 * inch, 0.95 * inch, 2.75 * inch, 1.45 * inch]))
-
-    el.append(Spacer(1, 18))
-    sign_tbl = [
-        ["Student Signatures (Group Members 1-4)", "Supervisor Approval", "HOD Endorsement"],
-        ["1. ____________________  2. ____________________\n3. ____________________  4. ____________________",
-         "\n____________________\n[Guide Name]", "\n____________________\n[HOD Name]"],
-    ]
-    el.append(_styled_table(sign_tbl, [3.1 * inch, 1.85 * inch, 1.85 * inch], header_bg="#1E293B"))
-
-    doc.build(el, onFirstPage=_footer_canvas("AeroSense AI — Project Synopsis"), onLaterPages=_footer_canvas("AeroSense AI — Project Synopsis"))
-
-    # Markdown Synopsis
-    md_text = f"""# PROJECT SYNOPSIS
-## {INSTITUTE_META['project_title']}
-**Application Name:** {INSTITUTE_META['app_name']} — *"{INSTITUTE_META['tagline']}"*  
-**Institution:** {INSTITUTE_META['institute']} | **Department:** {INSTITUTE_META['department']} | **Session:** {INSTITUTE_META['session']}
-
-### Group Members (4 Students)
-| Member Name | Roll No. / ID | Email | Role |
-| :--- | :--- | :--- | :--- |
-""" + "\n".join(f"| {m[0]} | {m[1]} | {m[2]} | {m[3]} |" for m in TEAM_MEMBERS) + f"""
-
-**Supervisor:** {INSTITUTE_META['guide']}  
-**Head of Department:** {INSTITUTE_META['hod']}
-
----
-
-### 1. Abstract
-AeroSense AI is a modular full-stack data science and forecasting platform integrating live **OpenAQ API v3** environmental telemetry, Apache Parquet data pipelines, **Indian CPCB (2014)** & **US EPA** AQI calculators, 6 Scikit-Learn/XGBoost ML models, 4 PyTorch sequence models (LSTM, GRU, TCN, Transformer), SHAP explainability, and automated reporting across a 10-page Streamlit UI.
-
-### 2. Core Objectives
-1. Authenticated OpenAQ v3 ingestion with retry/backoff, pagination, and Parquet provenance.
-2. Reproducible validation, IQR outlier filtering, and bounded temporal interpolation (`is_imputed` tracking).
-3. Dual-standard CPCB & US EPA AQI calculations with incomplete-panel transparency (`is_complete`).
-4. Leakage-free **70% / 15% / 15% chronological splitting** comparing naive baselines, ML regressors, and PyTorch DL architectures.
-5. Interactive spatial analysis, WHO/NAAQS health risk advisories, SHAP explanations, and verified **41/41 pytest** quality assurance.
-
-### 3. Key Empirical Findings
-- **Delhi Anand Vihar Calibration Series (n=2,161)**: `LinearRegression` (MAE `9.449 µg/m³`, R² `0.906`) and PyTorch `Transformer` (MAE `9.580 µg/m³`, R² `0.903`) outperform naive baselines (`30.966–40.117 MAE`).
-- **Live OpenAQ v3 Telemetry (R K Puram, Delhi, n=639)**: `LinearRegression` achieves `23.803 µg/m³` MAE (`R² = 0.854`), reducing forecasting error by **57.1%** over Seasonal Naive (`55.515 µg/m³`).
-"""
-    md_path.write_text(md_text, encoding="utf-8")
-    return pdf_path, md_path
+    from src.reporting.synopsis_builder import build_qu_synopsis
+    return build_qu_synopsis(TEAM_MEMBERS, INSTITUTE_META)
 
 # 2. IEEE-STYLE RESEARCH PAPER (PDF + MD)
 def build_research_paper():
@@ -307,9 +181,9 @@ def build_research_paper():
         styles["TitleHero"]
     ))
     el.append(Paragraph(
-        "<b>[Author 1 Name]</b><sup>1</sup>, <b>[Author 2 Name]</b><sup>1</sup>, <b>[Author 3 Name]</b><sup>1</sup>, <b>[Author 4 Name]</b><sup>1</sup>, and <b>[Supervisor Name]</b><sup>1</sup><br/>"
-        f"<i><sup>1</sup>{INSTITUTE_META['department']}, {INSTITUTE_META['institute']}, {INSTITUTE_META['city_state']}</i><br/>"
-        "<i>Emails: {[Author1..4 Emails Placeholder]}</i>",
+        "<b>Aryan Saini</b><sup>1</sup>, <b>Ayaan Ali</b><sup>1</sup>, <b>Kawalpreet Kaur</b><sup>1</sup>, <b>Mihir Kumar</b><sup>1</sup>, and <b>Mr. Abhishek Kumar</b><sup>1</sup><br/>"
+        "<i><sup>1</sup>Department of Computer Science &amp; Engineering (Data Science) [CSE-DS], Batch 2023 - 2027, Semester 7</i><br/>"
+        "<i>Student IDs / Roll Nos.: 23030173 / 2301315012, 23030175 / 2301315013, 23030255 / 2301315019, 23030268 / 2301315022 | Faculty Guide ID: QU0125261068</i>",
         styles["Center"]
     ))
     el.append(Spacer(1, 8))
@@ -428,8 +302,8 @@ def build_research_paper():
 
     md_text = f"""# AeroSense AI: Leakage-Free Machine Learning, Deep Sequence Modeling, and Explainable Air Quality Forecasting Using Real-Time OpenAQ v3 Telemetry
 
-**Authors:** `[Author 1 Name]`, `[Author 2 Name]`, `[Author 3 Name]`, `[Author 4 Name]`, `[Supervisor Name]`  
-**Affiliation:** {INSTITUTE_META['department']}, {INSTITUTE_META['institute']}
+**Authors:** Aryan Saini (ID: 23030173, Roll: 2301315012), Ayaan Ali (ID: 23030175, Roll: 2301315013), Kawalpreet Kaur (ID: 23030255, Roll: 2301315019), Mihir Kumar (ID: 23030268, Roll: 2301315022) | **Faculty Guide:** Mr. Abhishek Kumar (QU0125261068)  
+**Affiliation:** {INSTITUTE_META['department']} | **Batch / Sem:** {INSTITUTE_META['session']}
 
 ---
 
@@ -613,15 +487,15 @@ def build_presentation():
     p3.font.size = Pt(14)
     p3.font.color.rgb = MUTED
 
-    # 4 Group Member Placeholder Cards
+    # 4 Group Member Cards
     for idx, m in enumerate(TEAM_MEMBERS):
         x_pos = 0.7 + idx * 3.05
-        card = s1.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(x_pos), Inches(3.8), Inches(2.85), Inches(1.9))
+        card = s1.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(x_pos), Inches(3.8), Inches(2.85), Inches(1.95))
         card.fill.solid()
         card.fill.fore_color.rgb = CARD_DARK
         card.line.color.rgb = CYAN
         card.line.width = Pt(1)
-        ctb = s1.shapes.add_textbox(Inches(x_pos + 0.15), Inches(3.92), Inches(2.55), Inches(1.65))
+        ctb = s1.shapes.add_textbox(Inches(x_pos + 0.15), Inches(3.92), Inches(2.55), Inches(1.75))
         ctf = ctb.text_frame
         ctf.word_wrap = True
         cp0 = ctf.paragraphs[0]
@@ -629,7 +503,7 @@ def build_presentation():
         cp0.font.size = Pt(11)
         cp0.font.bold = True
         cp0.font.color.rgb = CYAN
-        for val, sz, col in [(m[0], 13, WHITE), (m[1], 11, MUTED), (m[3], 10.5, RGBColor(203, 213, 225))]:
+        for val, sz, col in [(m[0], 13, WHITE), (m[1], 10.5, MUTED), (m[2], 10, MUTED), (m[3], 10, RGBColor(203, 213, 225))]:
             cp = ctf.add_paragraph()
             cp.text = val
             cp.font.size = Pt(sz)
@@ -887,7 +761,7 @@ def build_presentation():
     p2.font.size = Pt(16)
     p2.font.color.rgb = WHITE
 
-    team_sum = [["Member Name", "Roll No. / USN", "Email", "Role"]] + TEAM_MEMBERS
+    team_sum = [["Student Name", "Student ID & Roll No.", "Batch / Sem / Branch", "Role"]] + TEAM_MEMBERS
     _add_table(s16, 1.0, 3.6, 11.3, 2.3, team_sum, font_pt=11.5)
 
     bot16 = s16.shapes.add_textbox(Inches(0.8), Inches(6.25), Inches(11.7), Inches(0.7))
@@ -905,5 +779,6 @@ if __name__ == "__main__":
     res_pdf, res_md = build_research_paper()
     rep_pdf, rep_md = build_project_report()
     ppt = build_presentation()
-    for p in [syn_pdf, syn_md, res_pdf, res_md, rep_pdf, rep_md, ppt]:
+    title_pdf = REPORTS_DIR / "Air_Pollution_Pattern_Analysis_and_AQI_Forecasting.pdf"
+    for p in [syn_pdf, syn_md, res_pdf, res_md, rep_pdf, title_pdf, rep_md, ppt]:
         print(f"Built deliverable: {p} ({p.stat().st_size:,} bytes)")

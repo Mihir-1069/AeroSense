@@ -232,7 +232,158 @@ def generate_all_figures() -> dict[str, Path]:
         plt.close(fig)
         paths["fig5"] = p5
 
+    paths["qu_logo"] = generate_qu_logo()
+    paths["fig6_uml"] = generate_uml_dfd_diagram()
     return paths
+
+
+def generate_qu_logo() -> Path:
+    """Render high-DPI Quantum University Roorkee emblem & wordmark for cover pages."""
+    from matplotlib.patches import FancyBboxPatch, Polygon, Rectangle
+
+    fig, ax = plt.subplots(figsize=(4.4, 2.5), dpi=300)
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 5.8)
+    ax.axis("off")
+    fig.patch.set_facecolor("white")
+    ax.set_facecolor("white")
+
+    # Iconic magenta/purple QU square badge at top-right of 'Quantum'
+    magenta = "#D81B60"
+    purple = "#6A1B7A"
+    charcoal = "#2D2D2D"
+
+    ax.add_patch(FancyBboxPatch((4.95, 3.65), 1.45, 1.45, boxstyle="round,pad=0.05,rounding_size=0.08", facecolor=magenta, edgecolor="none"))
+    ax.add_patch(Rectangle((5.22, 4.10), 0.90, 0.98, facecolor="white", edgecolor="none"))
+    ax.add_patch(Rectangle((5.42, 4.30), 0.50, 0.78, facecolor=magenta, edgecolor="none"))
+    ax.add_patch(Rectangle((5.61, 4.65), 0.14, 0.45, facecolor="white", edgecolor="none"))
+
+    # Cleanly spaced Q + uantum wordmark
+    ax.text(2.42, 2.68, "Q", fontsize=44, fontweight="bold", color=purple, ha="center", va="center", fontfamily="DejaVu Sans")
+    ax.text(3.28, 2.54, "uantum", fontsize=30, fontweight="bold", color=charcoal, ha="left", va="center", fontfamily="DejaVu Sans")
+    tail = Polygon([[2.35, 2.15], [2.95, 1.94], [3.55, 1.94], [2.78, 2.28]], closed=True, facecolor=magenta, edgecolor="none")
+    ax.add_patch(tail)
+
+    ax.text(5.40, 1.50, "UNIVERSITY", fontsize=17.5, fontweight="bold", fontstyle="italic", color=charcoal, ha="center", va="center", fontfamily="DejaVu Sans")
+    ax.text(5.40, 0.92, "ROORKEE, INDIA", fontsize=10.5, fontweight="bold", color="#475569", ha="center", va="center", fontfamily="DejaVu Sans")
+
+    out_path = FIG_DIR / "qu_logo.png"
+    fig.savefig(out_path, bbox_inches="tight", pad_inches=0.05, facecolor="white")
+    plt.close(fig)
+    return out_path
+
+
+def generate_uml_dfd_diagram() -> Path:
+    """Render 4-panel software design diagram: DFD, UML Class, Sequence & Control Flow."""
+    from matplotlib.patches import FancyBboxPatch
+
+    fig, axes = plt.subplots(2, 2, figsize=(12.4, 8.6), dpi=300)
+    fig.patch.set_facecolor("white")
+
+    def _box(ax, x, y, w, h, text, fc="#F8FAFC", ec="#0F172A", tc="#0F172A", fs=7.8, bold=False):
+        patch = FancyBboxPatch(
+            (x, y), w, h,
+            boxstyle="round,pad=0.02,rounding_size=0.08",
+            facecolor=fc, edgecolor=ec, linewidth=1.1,
+        )
+        ax.add_patch(patch)
+        ax.text(
+            x + w / 2, y + h / 2, text,
+            ha="center", va="center", fontsize=fs,
+            fontweight="bold" if bold else "normal",
+            color=tc, family="sans-serif",
+        )
+
+    def _arrow(ax, x1, y1, x2, y2, label="", col="#334155"):
+        ax.annotate(
+            "", xy=(x2, y2), xytext=(x1, y1),
+            arrowprops=dict(arrowstyle="-|>", color=col, lw=1.1, shrinkA=2, shrinkB=2),
+        )
+        if label:
+            mx, my = (x1 + x2) / 2, (y1 + y2) / 2
+            ax.text(
+                mx, my + (0.14 if abs(y2 - y1) < 0.3 else 0.0),
+                label, ha="center", va="center", fontsize=6.8, color="#334155",
+                bbox=dict(fc="white", ec="none", pad=1.0),
+            )
+
+    # Panel A: Level-1 Data Flow Diagram (DFD)
+    ax = axes[0, 0]
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 7)
+    ax.axis("off")
+    ax.set_title("A. Level-1 Data Flow Diagram (DFD)", fontweight="bold", fontsize=10.5, pad=6)
+    _box(ax, 0.3, 4.9, 2.2, 1.1, "OpenAQ API v3\nExternal Source", "#E0F2FE", "#0369A1", fs=7.5, bold=True)
+    _box(ax, 3.6, 4.9, 2.7, 1.1, "1.0 Ingestion &\nValidation Engine", "#F1F5F9", "#0F172A", fs=7.5, bold=True)
+    _box(ax, 7.2, 4.9, 2.4, 1.1, "Parquet Store\nraw/ & processed/", "#FEF3C7", "#B45309", fs=7.5, bold=True)
+    _box(ax, 3.6, 2.6, 2.7, 1.1, "2.0 Feature Matrix\n& Dual AQI Calc", "#F1F5F9", "#0F172A", fs=7.5, bold=True)
+    _box(ax, 7.2, 2.6, 2.4, 1.1, "Model Artifacts\n.pkl & .pt Files", "#EDE9FE", "#6D28D9", fs=7.5, bold=True)
+    _box(ax, 3.6, 0.4, 2.7, 1.1, "3.0 ML/DL Forecast\n& SHAP Engine", "#DCFCE7", "#15803D", fs=7.5, bold=True)
+    _box(ax, 0.3, 0.4, 2.2, 1.1, "End User &\nStreamlit 10-Page UI", "#E0F2FE", "#0369A1", fs=7.5, bold=True)
+    _arrow(ax, 2.5, 5.45, 3.6, 5.45, "JSON")
+    _arrow(ax, 6.3, 5.45, 7.2, 5.45, "Clean")
+    _arrow(ax, 4.95, 4.9, 4.95, 3.7, "DF")
+    _arrow(ax, 4.95, 2.6, 4.95, 1.5, "X, y")
+    _arrow(ax, 6.3, 0.95, 8.4, 2.6, "Save")
+    _arrow(ax, 3.6, 0.95, 2.5, 0.95, "Charts/AQI")
+    _arrow(ax, 1.4, 1.5, 3.6, 3.1, "Queries")
+
+    # Panel B: UML Class Diagram
+    ax = axes[0, 1]
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 7)
+    ax.axis("off")
+    ax.set_title("B. UML Class Architecture", fontweight="bold", fontsize=10.5, pad=6)
+    _box(ax, 0.15, 4.3, 2.75, 2.2, "OpenAQClient\n----------------\n- _api_key, _base_url\n----------------\n+ get_locations()\n+ get_sensor_hours()", "#EFF6FF", "#1D4ED8", fs=7.1)
+    _box(ax, 3.65, 4.3, 2.8, 2.2, "DataIngestion\n----------------\n- client: OpenAQClient\n----------------\n+ fetch_locations()\n+ fetch_measurements()", "#F8FAFC", "#0F172A", fs=7.1)
+    _box(ax, 7.05, 4.3, 2.8, 2.2, "AQICalculator\n----------------\n- CPCB / EPA tables\n----------------\n+ compute_subindex()\n+ calculate_aqi()", "#F8FAFC", "#0F172A", fs=7.1)
+    _box(ax, 0.45, 0.7, 4.15, 2.4, "MLTrainer / ModelSuite\n----------------\n- models: Linear..XGBoost\n- ratios: 70 / 15 / 15 split\n----------------\n+ train_models(df)\n+ predict(model_dict, df)", "#F5F3FF", "#6D28D9", fs=7.1)
+    _box(ax, 5.2, 0.7, 4.5, 2.4, "DLForecaster (nn.Module)\n----------------\n- LSTM / GRU / TCN / Trans.\n- lookback=24, horizon=h\n----------------\n+ forward(x_seq)\n+ train_dl_model(series)", "#F0FDF4", "#15803D", fs=7.1)
+    _arrow(ax, 2.9, 5.4, 3.65, 5.4, "uses")
+    _arrow(ax, 5.05, 4.3, 2.6, 3.1, "clean df")
+    _arrow(ax, 5.05, 4.3, 7.2, 3.1, "series")
+
+    # Panel C: UML Sequence Diagram
+    ax = axes[1, 0]
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 7)
+    ax.axis("off")
+    ax.set_title("C. UML Sequence Diagram (Forecast Workflow)", fontweight="bold", fontsize=10.5, pad=6)
+    actors = [(1.1, "User"), (3.3, "Streamlit UI"), (5.6, "Pipeline"), (8.1, "ML/DL/XAI")]
+    for x0, lbl in actors:
+        _box(ax, x0 - 0.85, 5.8, 1.7, 0.75, lbl, "#0F172A", "#0F172A", "white", fs=7.6, bold=True)
+        ax.plot([x0, x0], [0.6, 5.8], linestyle="--", color="#94A3B8", linewidth=1.0)
+    _arrow(ax, 1.1, 5.1, 3.3, 5.1, "1: Select Dataset/Country")
+    _arrow(ax, 3.3, 4.3, 5.6, 4.3, "2: validate & clean(df)")
+    _arrow(ax, 5.6, 3.5, 8.1, 3.5, "3: build_features() + fit()")
+    _arrow(ax, 8.1, 2.6, 5.6, 2.6, "4: MAE/RMSE/R² + SHAP")
+    _arrow(ax, 5.6, 1.8, 3.3, 1.8, "5: Plotly Figs + AQI")
+    _arrow(ax, 3.3, 1.0, 1.1, 1.0, "6: PDF/HTML/ZIP Report")
+
+    # Panel D: Control Flow & Use-Case Architecture
+    ax = axes[1, 1]
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 7)
+    ax.axis("off")
+    ax.set_title("D. System Control Flow & Use-Case Governance", fontweight="bold", fontsize=10.5, pad=6)
+    _box(ax, 0.4, 5.4, 2.7, 0.95, "Start: app.py\nensure_ready()", "#E0F2FE", "#0369A1", fs=7.4, bold=True)
+    _box(ax, 3.6, 5.4, 2.8, 0.95, "API Key Present?\nYes->Live | No->Seed", "#FEF3C7", "#B45309", fs=7.4, bold=True)
+    _box(ax, 7.0, 5.4, 2.6, 0.95, "Parquet Store\n>= 2,157 Records", "#F1F5F9", "#0F172A", fs=7.4)
+    _box(ax, 0.4, 3.1, 4.3, 1.4, "Use Cases: Explore & Audit\n• Global Data Explorer  • Spatial Hotspots\n• Pollution Analytics   • Health Risk Audit", "#F8FAFC", "#0F172A", fs=7.3)
+    _box(ax, 5.2, 3.1, 4.4, 1.4, "Use Cases: Intelligence & Forecasting\n• CPCB/EPA AQI Engine  • ML/DL Studio\n• Model Benchmarking   • SHAP XAI", "#F5F3FF", "#6D28D9", fs=7.3)
+    _box(ax, 2.3, 0.8, 5.4, 1.15, "Len >= 50? -> Chronological Split (70/15/15)\nExport Research PDF / HTML / PPTX / ZIP", "#DCFCE7", "#15803D", fs=7.5, bold=True)
+    _arrow(ax, 3.1, 5.88, 3.6, 5.88)
+    _arrow(ax, 6.4, 5.88, 7.0, 5.88)
+    _arrow(ax, 4.9, 5.4, 2.6, 4.5)
+    _arrow(ax, 5.1, 5.4, 7.3, 4.5)
+    _arrow(ax, 2.6, 3.1, 4.2, 1.95)
+    _arrow(ax, 7.3, 3.1, 5.8, 1.95)
+
+    plt.tight_layout(pad=1.2)
+    out_path = FIG_DIR / "fig6_uml_system_design.png"
+    fig.savefig(out_path, bbox_inches="tight")
+    plt.close(fig)
+    return out_path
 
 if __name__ == "__main__":
     out = generate_all_figures()

@@ -1,7 +1,7 @@
 # AeroSense AI: Leakage-Free Machine Learning, Deep Sequence Modeling, and Explainable Air Quality Forecasting Using Real-Time OpenAQ v3 Telemetry
 
-**Authors:** `[Author 1 Name]`, `[Author 2 Name]`, `[Author 3 Name]`, `[Author 4 Name]`, `[Supervisor Name]`  
-**Affiliation:** [Department Name Placeholder], [University / Institute Name Placeholder]
+**Authors:** Aryan Saini (ID: 23030173, Roll: 2301315012), Ayaan Ali (ID: 23030175, Roll: 2301315013), Kawalpreet Kaur (ID: 23030255, Roll: 2301315019), Mihir Kumar (ID: 23030268, Roll: 2301315022) | **Faculty Guide:** Mr. Abhishek Kumar (QU0125261068)  
+**Affiliation:** Department of Computer Science & Engineering (Data Science) [CSE-DS] | **Batch / Sem:** Batch 2023 - 2027 | Semester 7
 
 ---
 

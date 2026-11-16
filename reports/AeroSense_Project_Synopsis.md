@@ -1,18 +1,18 @@
 # PROJECT SYNOPSIS
-## AeroSense: Intelligent Global Air Quality Monitoring, Analysis and Forecasting Using Machine Learning and Deep Learning
+## Air Pollution Pattern Analysis and AQI Forecasting (AeroSense AI: Global Air Pollution Pattern Analysis and AQI Forecasting Using Machine Learning and Deep Learning)
 **Application Name:** AeroSense AI — *"Understand Pollution. Predict Tomorrow. Build a Cleaner Future."*  
-**Institution:** [University / Institute Name Placeholder] | **Department:** [Department Name Placeholder] | **Session:** [Academic Year 2025-2026]
+**Programme:** Department of Computer Science & Engineering (Data Science) [CSE-DS] | **Batch / Sem:** Batch 2023 - 2027 | Semester 7
 
 ### Group Members (4 Students)
-| Member Name | Roll No. / ID | Email | Role |
+| Student Name | Student ID & Roll No. | Batch / Sem / Branch | Primary Engineering Ownership |
 | :--- | :--- | :--- | :--- |
-| [Member 1 Full Name] | [Roll No. / USN 1] | [Email 1] | Data Engineering, OpenAQ v3 API & Parquet Pipeline |
-| [Member 2 Full Name] | [Roll No. / USN 2] | [Email 2] | Feature Synthesis, CPCB/EPA AQI Engine & Baselines |
-| [Member 3 Full Name] | [Roll No. / USN 3] | [Email 3] | ML/DL Model Architectures, Training & Benchmarking |
-| [Member 4 Full Name] | [Roll No. / USN 4] | [Email 4] | SHAP Explainability, 10-Page Streamlit UI & Reporting |
+| Aryan Saini | ID: 23030173 | Roll: 2301315012 | 2023 - 2027 | Sem 7 | CSE-DS | Data Engineering, OpenAQ v3 API & Parquet Pipeline |
+| Ayaan Ali | ID: 23030175 | Roll: 2301315013 | 2023 - 2027 | Sem 7 | CSE-DS | Feature Synthesis, CPCB/EPA AQI Engine & Baselines |
+| Kawalpreet Kaur | ID: 23030255 | Roll: 2301315019 | 2023 - 2027 | Sem 7 | CSE-DS | ML/DL Model Architectures, Training & Benchmarking |
+| Mihir Kumar | ID: 23030268 | Roll: 2301315022 | 2023 - 2027 | Sem 7 | CSE-DS | SHAP Explainability, 10-Page Streamlit UI & Reporting |
 
-**Supervisor:** [Prof. / Dr. Guide Name Placeholder, Designation]  
-**Head of Department:** [Prof. / Dr. HOD Name Placeholder, Head of Department]
+**Supervisor:** Mr. Abhishek Kumar (QU0125261068)  
+**Head of Department:** Head of Department, CSE (Data Science)
 
 ---
 

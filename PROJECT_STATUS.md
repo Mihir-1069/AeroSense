@@ -1,6 +1,9 @@
 # AeroSense AI — Project Status
 
-**Project:** AeroSense: Intelligent Global Air Quality Monitoring, Analysis and Forecasting Using Machine Learning and Deep Learning  
+**Project:** Air Pollution Pattern Analysis and AQI Forecasting (AeroSense AI: Intelligent Global Air Quality Monitoring, Analysis and Forecasting Using Machine Learning and Deep Learning)  
+**Institution:** Department of Computer Science & Engineering, Quantum School of Technology, Quantum University, Roorkee - 247167  
+**Team (Batch 2023 - 2027 | Sem 7 | CSE-DS):** Aryan Saini (`23030173` / `2301315012`), Ayaan Ali (`23030175` / `2301315013`), Kawalpreet Kaur (`23030255` / `2301315019`), Mihir Kumar (`23030268` / `2301315022`)  
+**Faculty Assigned:** `Mr. Abhishek Kumar (QU0125261068)`  
 **Location:** `c:\Users\mihir\Desktop\AeroSense`  
 **Status:** Complete & Verified  
 
@@ -17,5 +20,5 @@
 - [x] **Explainable AI & Visualization**: `src/explainability/feature_importance.py`, `src/visualization/charts.py`
 - [x] **Academic Reporting Engine**: `src/reporting/report_generator.py` (Markdown, HTML, ReportLab PDF, ZIP bundle)
 - [x] **10-Page Streamlit Application**: `app.py` + `pages/01` through `pages/10`
-- [x] **Automated Testing**: `tests/` (30/30 tests passing via `pytest`)
+- [x] **Automated Testing**: `tests/` (46/46 tests passing via `pytest`, including Streamlit Cloud bootstrap, `map_scatter`, and AppTest smoke checks)
 - [x] **Documentation**: `README.md`, `docs/ARCHITECTURE.md`, `docs/METHODOLOGY.md`, `docs/BTECH_PROJECT_REPORT.md`
