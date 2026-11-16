@@ -12,7 +12,6 @@ import pandas as pd
 
 log = logging.getLogger(__name__)
 
-
 def add_temporal_features(df: pd.DataFrame, dt_col: str = "datetime_utc") -> pd.DataFrame:
     """Add calendar features derived from the datetime column."""
     df = df.copy()
@@ -36,7 +35,6 @@ def add_temporal_features(df: pd.DataFrame, dt_col: str = "datetime_utc") -> pd.
     df["season"] = df["month"].map(season_map)
     return df
 
-
 def add_lag_features(
     df: pd.DataFrame,
     target_col: str = "value",
@@ -52,7 +50,6 @@ def add_lag_features(
         for lag in lags:
             df[f"lag_{lag}"] = df[target_col].shift(lag)
     return df
-
 
 def add_rolling_features(
     df: pd.DataFrame,
@@ -80,7 +77,6 @@ def add_rolling_features(
             df[f"roll_max_{w}"]  = rolled.max()
     return df
 
-
 def add_trend_feature(
     df: pd.DataFrame,
     target_col: str = "value",
@@ -102,7 +98,6 @@ def add_trend_feature(
     else:
         df[f"trend_{window}"] = _trend(df[target_col])
     return df
-
 
 def build_feature_matrix(
     df: pd.DataFrame,
@@ -126,7 +121,6 @@ def build_feature_matrix(
         log.info("Feature matrix: %d → %d rows after dropping NaN.", before, len(df))
     log.info("Feature matrix ready: %d rows × %d cols.", len(df), len(df.columns))
     return df.reset_index(drop=True)
-
 
 FEATURE_COLUMNS = [
     "hour", "day_of_week", "day_of_month", "month", "quarter",

@@ -17,23 +17,11 @@ from src.aqi.cpcb import calculate_cpcb_aqi
 from src.aqi.us_epa import calculate_us_epa_aqi
 from src.visualization.charts import PLOTLY_TEMPLATE, PALETTE
 
+from src.visualization.theme import apply_theme
+
 st.set_page_config(page_title="Health Advisory — AeroSense AI", page_icon="🏥", layout="wide")
 
-st.markdown("""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-html, body, [class*="css"] { font-family:'Inter',sans-serif; }
-.stApp { background: linear-gradient(135deg,#0D1117,#111827,#0D1117); }
-[data-testid="stSidebar"] { background: linear-gradient(180deg,#0D1117,#161B22); border-right:1px solid #21262D; }
-.section-header { font-size:1.1rem; font-weight:600; color:#00D4FF; border-left:3px solid #00D4FF; padding-left:.75rem; margin:1.5rem 0 .75rem 0; }
-.health-card { background:linear-gradient(135deg,#161B22,#21262D); border:1px solid #30363D; border-radius:12px; padding:1.2rem; margin-bottom:1rem; }
-.alert-box { border-radius:8px; padding:1rem; margin:0.8rem 0; font-size:0.95rem; }
-.alert-severe { background:rgba(126,0,35,0.2); border:1px solid #7E0023; color:#FF809B; }
-.alert-very-poor { background:rgba(255,0,0,0.15); border:1px solid #FF0000; color:#FFA4A4; }
-.alert-poor { background:rgba(255,126,0,0.15); border:1px solid #FF7E00; color:#FFD199; }
-.alert-moderate { background:rgba(255,255,0,0.12); border:1px solid #CCCC00; color:#FFFF99; }
-.alert-good { background:rgba(0,228,0,0.12); border:1px solid #00E400; color:#85FF85; }
-</style>""", unsafe_allow_html=True)
+apply_theme()
 
 st.title("🏥 Public Health Risk & Advisory Engine")
 st.caption("Epidemiological health exposure risk assessment, WHO 2021 compliance audits, and vulnerable group guidance.")

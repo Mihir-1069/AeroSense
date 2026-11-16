@@ -41,10 +41,7 @@ REPORTS_DIR = settings.REPORTS_DIR
 FIG_DIR = REPORTS_DIR / "figures"
 REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 
-
-# ---------------------------------------------------------------------------
 # Shared Team Placeholders
-# ---------------------------------------------------------------------------
 TEAM_MEMBERS = [
     ["[Member 1 Full Name]", "[Roll No. / USN 1]", "[Email 1]", "Data Engineering, OpenAQ v3 API & Parquet Pipeline"],
     ["[Member 2 Full Name]", "[Roll No. / USN 2]", "[Email 2]", "Feature Synthesis, CPCB/EPA AQI Engine & Baselines"],
@@ -65,10 +62,7 @@ INSTITUTE_META = {
     "hod": "[Prof. / Dr. HOD Name Placeholder, Head of Department]",
 }
 
-
-# ---------------------------------------------------------------------------
 # ReportLab Styling Helpers
-# ---------------------------------------------------------------------------
 def _build_styles():
     base = getSampleStyleSheet()
     styles = {
@@ -118,7 +112,6 @@ def _build_styles():
     }
     return styles
 
-
 def _styled_table(data: List[List[str]], col_widths: List[float], header_bg: str = "#0369A1") -> Table:
     cell_style = ParagraphStyle("TCell", fontName="Helvetica", fontSize=8.3, leading=11, textColor=colors.HexColor("#0F172A"))
     head_style = ParagraphStyle("THead", fontName="Helvetica-Bold", fontSize=8.5, leading=11, textColor=colors.white)
@@ -140,7 +133,6 @@ def _styled_table(data: List[List[str]], col_widths: List[float], header_bg: str
     ]))
     return t
 
-
 def _add_figure(elements: list, fig_name: str, caption: str, styles: dict, width_in: float = 6.3):
     p = FIG_DIR / fig_name
     if not p.exists():
@@ -154,7 +146,6 @@ def _add_figure(elements: list, fig_name: str, caption: str, styles: dict, width
     elements.append(img)
     elements.append(Paragraph(caption, styles["Caption"]))
 
-
 def _footer_canvas(title_short: str):
     def _draw(canvas, doc):
         canvas.saveState()
@@ -165,10 +156,7 @@ def _footer_canvas(title_short: str):
         canvas.restoreState()
     return _draw
 
-
-# ---------------------------------------------------------------------------
 # 1. PROJECT SYNOPSIS (PDF + MD)
-# ---------------------------------------------------------------------------
 def build_synopsis():
     styles = _build_styles()
     pdf_path = REPORTS_DIR / "AeroSense_Project_Synopsis.pdf"
@@ -300,10 +288,7 @@ AeroSense AI is a modular full-stack data science and forecasting platform integ
     md_path.write_text(md_text, encoding="utf-8")
     return pdf_path, md_path
 
-
-# ---------------------------------------------------------------------------
 # 2. IEEE-STYLE RESEARCH PAPER (PDF + MD)
-# ---------------------------------------------------------------------------
 def build_research_paper():
     styles = _build_styles()
     pdf_path = REPORTS_DIR / "AeroSense_Research_Paper.pdf"
@@ -479,192 +464,19 @@ AeroSense AI unifies OpenAQ v3 live ingestion, bounded data validation/imputatio
     md_path.write_text(md_text, encoding="utf-8")
     return pdf_path, md_path
 
-
-# ---------------------------------------------------------------------------
 # 3. COMPLETE FINAL-YEAR B.TECH PROJECT REPORT (PDF + MD)
-# ---------------------------------------------------------------------------
 def build_project_report():
-    styles = _build_styles()
-    pdf_path = REPORTS_DIR / "AeroSense_Final_Project_Report.pdf"
-    md_path = REPORTS_DIR / "AeroSense_Final_Project_Report.md"
-
-    doc = SimpleDocTemplate(
-        str(pdf_path), pagesize=A4,
-        leftMargin=0.75 * inch, rightMargin=0.75 * inch,
-        topMargin=0.75 * inch, bottomMargin=0.75 * inch,
+    from src.reporting.detailed_project_report import build_detailed_project_report
+    return build_detailed_project_report(
+        styles=_build_styles(),
+        team_members=TEAM_MEMBERS,
+        meta=INSTITUTE_META,
+        styled_table=_styled_table,
+        add_figure=_add_figure,
+        footer_canvas=_footer_canvas,
     )
-    el = []
 
-    # ---- TITLE PAGE ----
-    el.append(Spacer(1, 0.3 * inch))
-    el.append(Paragraph("A FINAL YEAR PROJECT REPORT ON", styles["Center"]))
-    el.append(Spacer(1, 0.1 * inch))
-    el.append(Paragraph(INSTITUTE_META["project_title"], styles["TitleHero"]))
-    el.append(Paragraph(f"Platform: {INSTITUTE_META['app_name']} — \"{INSTITUTE_META['tagline']}\"", styles["SubHero"]))
-    el.append(Spacer(1, 0.2 * inch))
-    el.append(Paragraph(f"Submitted in partial fulfillment for the award of the degree of<br/><b>{INSTITUTE_META['degree']}</b>", styles["Center"]))
-    el.append(Spacer(1, 0.25 * inch))
-    el.append(Paragraph("Submitted By", styles["CenterBold"]))
-    el.append(_styled_table([["Student Name", "Roll No. / USN", "Email", "Contribution Scope"]] + TEAM_MEMBERS,
-                            [1.45 * inch, 1.15 * inch, 1.4 * inch, 2.7 * inch]))
-    el.append(Spacer(1, 0.25 * inch))
-    el.append(Paragraph(f"Under the Guidance of<br/><b>{INSTITUTE_META['guide']}</b>", styles["Center"]))
-    el.append(Spacer(1, 0.25 * inch))
-    el.append(Paragraph(f"<b>{INSTITUTE_META['department']}</b><br/>{INSTITUTE_META['institute']}<br/>{INSTITUTE_META['city_state']}<br/>{INSTITUTE_META['session']}", styles["Center"]))
-    el.append(PageBreak())
-
-    # ---- CERTIFICATE & DECLARATION PAGE ----
-    el.append(Paragraph("BONAFIDE CERTIFICATE", styles["TitleHero"]))
-    el.append(Paragraph(
-        f"This is to certify that the project report entitled <b>\"{INSTITUTE_META['project_title']}\"</b> is a bonafide work carried out by <b>[Member 1 Name] ([Roll 1])</b>, <b>[Member 2 Name] ([Roll 2])</b>, <b>[Member 3 Name] ([Roll 3])</b>, and <b>[Member 4 Name] ([Roll 4])</b> in partial fulfillment of the requirements for the award of {INSTITUTE_META['degree']} at {INSTITUTE_META['institute']} during {INSTITUTE_META['session']}.",
-        styles["Body"]
-    ))
-    el.append(Spacer(1, 0.3 * inch))
-    el.append(_styled_table([
-        ["Project Guide", "Head of Department", "External Examiner"],
-        [f"\n\n____________________\n{INSTITUTE_META['guide']}", f"\n\n____________________\n{INSTITUTE_META['hod']}", "\n\n____________________\n[External Examiner]"]
-    ], [2.23 * inch, 2.23 * inch, 2.24 * inch], header_bg="#1E293B"))
-
-    el.append(Spacer(1, 0.4 * inch))
-    el.append(Paragraph("CANDIDATE DECLARATION", styles["H1"]))
-    el.append(Paragraph(
-        "We hereby declare that the engineering work, code artifacts, empirical evaluations, and software implementation presented in this report represent our original work, with all external APIs (OpenAQ v3), regulatory methodologies (CPCB/US EPA), and open-source ML/DL frameworks duly cited. No benchmark metrics or pollutant measurements have been fabricated.",
-        styles["Body"]
-    ))
-    el.append(Spacer(1, 0.15 * inch))
-    el.append(_styled_table([
-        ["Member 1 Signature", "Member 2 Signature", "Member 3 Signature", "Member 4 Signature"],
-        ["\n________________\n[Member 1 Name]", "\n________________\n[Member 2 Name]", "\n________________\n[Member 3 Name]", "\n________________\n[Member 4 Name]"]
-    ], [1.67 * inch, 1.67 * inch, 1.67 * inch, 1.69 * inch], header_bg="#334155"))
-    el.append(PageBreak())
-
-    # ---- ACKNOWLEDGEMENT & TOC ----
-    el.append(Paragraph("ACKNOWLEDGEMENT", styles["H1"]))
-    el.append(Paragraph(
-        f"We express our heartfelt gratitude to our guide <b>{INSTITUTE_META['guide']}</b> for continuous technical mentorship, critical design feedback, and encouragement throughout this engineering endeavor. We also thank <b>{INSTITUTE_META['hod']}</b>, faculty members of {INSTITUTE_META['department']}, and the open-source communities maintaining OpenAQ, Scikit-Learn, PyTorch, SHAP, and Streamlit.",
-        styles["Body"]
-    ))
-    el.append(Paragraph("TABLE OF CONTENTS", styles["H1"]))
-    toc_rows = [
-        ["Chapter", "Section Title", "Coverage"],
-        ["Chapter 1", "Introduction & Motivation", "Project identity, atmospheric urgency, India-first strategy"],
-        ["Chapter 2", "Literature Review & Gap Analysis", "ARIMA/ML/DL survey, temporal leakage & partial AQI gaps"],
-        ["Chapter 3", "Software Requirement Specification", "Functional, non-functional, hardware & software specs"],
-        ["Chapter 4", "System Architecture & Data Pipeline", "Layered design, OpenAQ v3 integration, Parquet validation"],
-        ["Chapter 5", "AQI Engine, Features & Modeling", "CPCB/US EPA math, 34 features, 6 ML + 4 PyTorch DL models"],
-        ["Chapter 6", "Experimental Results & Discussion", "Live OpenAQ + Benchmark metrics, SHAP, tree extrapolation finding"],
-        ["Chapter 7", "Verification & Quality Assurance", "41/41 Pytest automated verification & AppTest results"],
-        ["Chapter 8", "User Interface Walkthrough", "app.py + all 10 interactive Streamlit pages"],
-        ["Chapter 9", "Conclusion & Future Roadmap", "Phase 2 global scale-out & ERA5 meteorological fusion"],
-    ]
-    el.append(_styled_table(toc_rows, [1.1 * inch, 2.3 * inch, 3.3 * inch]))
-    el.append(PageBreak())
-
-    # ---- CHAPTERS 1-4 ----
-    el.append(Paragraph("CHAPTER 1: INTRODUCTION", styles["H1"]))
-    el.append(Paragraph(
-        "Air pollution is a critical public health crisis across emerging economies. In India, winter temperature inversions trap primary exhaust and secondary aerosols across the Indo-Gangetic Plain, frequently pushing PM2.5 beyond Severe regulatory bounds (>250 µg/m³). AeroSense AI delivers a unified, research-grade web platform capable of ingesting live international measurements via OpenAQ API v3, computing standardized AQI indices, training and benchmarking 10+ forecasting algorithms chronologically, explaining model drivers with SHAP, and exporting formal academic reports.",
-        styles["Body"]
-    ))
-
-    el.append(Paragraph("CHAPTER 2: LITERATURE SURVEY & GAP ANALYSIS", styles["H1"]))
-    el.append(Paragraph(
-        "Statistical methods (ARIMA, SARIMA) handle linear seasonality well but struggle with nonlinear abrupt spikes. Gradient boosted trees (XGBoost, LightGBM, HistGradientBoosting) capture nonlinear interactions effectively when enriched with lagged features. Sequence deep learning (LSTM, GRU, TCN, Transformer) natively extracts temporal representations without manual feature tuning. However, conventional implementations routinely leak future samples via random splits and overlook sensor downtime during AQI calculation. AeroSense AI enforces zero-leakage chronological evaluation and explicit completeness reporting.",
-        styles["Body"]
-    ))
-
-    el.append(Paragraph("CHAPTER 3: SOFTWARE REQUIREMENT SPECIFICATION", styles["H1"]))
-    el.append(Paragraph(
-        "• Functional Requirements: Authenticated OpenAQ v3 querying by ISO country code and pollutant; automated validation and imputation; CPCB & US EPA AQI calculators; interactive ML/DL training studio; model leaderboard; SHAP & residual XAI; spatial hotspot mapping; WHO/NAAQS advisory; PDF/HTML/MD/ZIP export.<br/>"
-        "• Non-Functional Requirements: Modular codebase; strict environment-variable secret hygiene (.env gitignored); Apache Parquet columnar compression; reproducible deterministic seeds (seed=42); <15s full automated test suite.",
-        styles["Body"]
-    ))
-
-    el.append(Paragraph("CHAPTER 4: SYSTEM DESIGN & DATA PIPELINE", styles["H1"]))
-    el.append(Paragraph(
-        "The project codebase separates presentation (app.py, pages/01..10) from domain logic (src/). OpenAQClient queries /v3/locations?iso=...&parameters_id=... and /v3/sensors/{id}/hours with retries and backoff. DataIngestion tags every row with source_provider, api_endpoint, and retrieved_at. validate_measurements enforces physical ranges (0-1000 µg/m³ for PM2.5), while clean_measurements removes IQR×3 anomalies and applies bounded linear interpolation (limit=6h) flagging is_imputed while preserving station coordinates.",
-        styles["Body"]
-    ))
-    _add_figure(el, "fig1_live_station_profiles.png", "Figure 4.1: Live OpenAQ v3 hourly daily profiles and IST diurnal cycles across Delhi, Lucknow, and Hyderabad.", styles, width_in=6.3)
-
-    # ---- CHAPTERS 5-6 ----
-    el.append(Paragraph("CHAPTER 5: AQI INTELLIGENCE, FEATURES & MODELING", styles["H1"]))
-    el.append(Paragraph(
-        "The AQI engine implements Indian CPCB (2014) across Good (0-50) to Severe (401-500) and US EPA breakpoints, supporting single-pollutant or full-panel inputs and marking is_complete=False whenever pollutants are missing. Feature engineering builds cyclical harmonics (hour_sin/cos, dow_sin/cos, month_sin/cos), lags (1,3,6,12,24), and shifted rolling stats (3,6,12,24 h). Modeling covers 3 Baselines, 6 Sklearn/XGBoost ML models, and 4 PyTorch DL models (LSTM, GRU, TCN, Transformer).",
-        styles["Body"]
-    ))
-    _add_figure(el, "fig5_aqi_exceedance.png", "Figure 5.1: Live CPCB AQI categorical breakdown and WHO vs. NAAQS exceedance rates.", styles, width_in=6.3)
-
-    el.append(Paragraph("CHAPTER 6: EXPERIMENTAL RESULTS & DISCUSSION", styles["H1"]))
-    el.append(Paragraph(
-        "6.1 Controlled 90-Day Benchmark (Delhi Anand Vihar, n=2,161): Chronological 70/15/15 splitting evaluates models strictly on unseen future weeks. LinearRegression (MAE=9.449 µg/m³, R²=0.906) and Ridge (9.457, R²=0.906) led tabular ML, closely followed by the univariate PyTorch Transformer (MAE=9.580 µg/m³, R²=0.903). All learned models drastically beat Seasonal Naive (30.966 MAE) and Persistence (40.117 MAE). On 24-hour multi-step forecasting, a single-shot direct LSTM (12 epochs) yielded MAE=30.288 µg/m³ due to compounding atmospheric uncertainty over 24 consecutive hours.",
-        styles["Body"]
-    ))
-    _add_figure(el, "fig2_model_benchmark.png", "Figure 6.1: Held-out test MAE and R² across ML and PyTorch DL architectures.", styles, width_in=6.3)
-    el.append(Paragraph(
-        "6.2 Live OpenAQ v3 Telemetry Evaluation (R K Puram, Delhi, n=639): During Oct-Nov 2026, PM2.5 rose sharply from moderate October levels to extreme November peaks (501.00 µg/m³). LinearRegression (MAE=23.803, R²=0.854) and Ridge (MAE=24.714, R²=0.839) generalized cleanly across the upward trend (57.1% improvement over Seasonal Naive MAE=55.515), whereas XGBoost (33.479 MAE, R²=0.714) under-predicted test peaks because tree leaves cannot extrapolate beyond max(y_train). This confirms an essential ML engineering rule: linear/regularized components are vital when forecasting non-stationary environmental extremes.",
-        styles["Body"]
-    ))
-    _add_figure(el, "fig3_forecast_residuals.png", "Figure 6.2: Chronological held-out test trajectory and residual distribution (Mean=0.82, Std=11.96).", styles, width_in=6.3)
-    _add_figure(el, "fig4_shap_importance.png", "Figure 6.3: TreeSHAP Mean |SHAP| feature attribution drivers.", styles, width_in=5.8)
-
-    # ---- CHAPTERS 7-9 ----
-    el.append(Paragraph("CHAPTER 7: SYSTEM TESTING & QUALITY ASSURANCE", styles["H1"]))
-    qa_tbl = [
-        ["Test Suite Module", "Cases", "Scope Verified", "Outcome"],
-        ["tests/test_aqi.py", "12", "CPCB (Good→Severe, PM10, negative) & US EPA breakpoints", "12/12 PASSED"],
-        ["tests/test_features.py", "2", "Feature matrix schema & DL sequence alignment", "2/2 PASSED"],
-        ["tests/test_validation.py", "4", "Range bounds, deduplication, bounded interpolation", "4/4 PASSED"],
-        ["tests/test_ml_dl.py", "3", "ML training, naive baselines, LSTM/GRU/TCN/Transformer shapes", "3/3 PASSED"],
-        ["tests/test_reporting.py", "4", "Dataset stats, Markdown, HTML, ZIP exports", "4/4 PASSED"],
-        ["tests/test_api_and_explainability.py", "5", "OpenAQ v3 queries/auth (mocked), SHAP/PI across families, PDF", "5/5 PASSED"],
-        ["tests/test_streamlit_pages.py", "11", "Streamlit AppTest execution of app.py + all 10 UI pages", "11/11 PASSED"],
-    ]
-    el.append(_styled_table(qa_tbl, [2.1 * inch, 0.55 * inch, 3.05 * inch, 1.0 * inch]))
-
-    el.append(Paragraph("CHAPTER 8: STREAMLIT APPLICATION MODULES", styles["H1"]))
-    el.append(Paragraph(
-        "The live application (verified via headless Streamlit AppTest and Playwright Chromium inspection at http://localhost:8501) spans: Home Overview (app.py), 01 Global Data Explorer, 02 Pollution Analytics, 03 AQI Intelligence, 04 Forecasting Studio, 05 Model Benchmarking, 06 Explainable AI, 07 Spatial Hotspot Analysis, 08 Health Risk and Advisory, 09 Research Reports, and 10 System Diagnostics & Settings.",
-        styles["Body"]
-    ))
-
-    el.append(Paragraph("CHAPTER 9: CONCLUSION & FUTURE WORK", styles["H1"]))
-    el.append(Paragraph(
-        "AeroSense AI fulfills every academic and software engineering requirement for transparent air quality analytics and forecasting. Phase 2 enhancements include Copernicus ERA5 weather integration (wind speed, mixing height, humidity), multi-pollutant multivariate DL inputs, and scheduled cloud ingestion.",
-        styles["Body"]
-    ))
-
-    el.append(Paragraph("APPENDIX: VIVA VOCE KEY QUESTIONS", styles["H1"]))
-    for q in [
-        "Q1. Why did LinearRegression/Ridge outperform XGBoost on live R K Puram data? Tree models bound leaf outputs inside training targets and cannot extrapolate upward when test-week smog spikes exceed training maxima.",
-        "Q2. Why does AeroSense reject shuffled train_test_split? Shuffling leaks adjacent hourly autocorrelated points across train and test boundaries, artificially inflating R².",
-        "Q3. How does OpenAQ v3 differ from v2? OpenAQ v3 mandates X-API-Key authentication, ISO country discovery via /v3/locations, and sensor-scoped querying via /v3/sensors/{id}/hours with datetime_from/datetime_to."
-    ]:
-        el.append(Paragraph(f"• {q}", styles["Bullet"]))
-
-    doc.build(el, onFirstPage=_footer_canvas("AeroSense AI — B.Tech Final Project Report"), onLaterPages=_footer_canvas("AeroSense AI — B.Tech Final Project Report"))
-
-    md_text = f"""# FINAL YEAR PROJECT REPORT
-## {INSTITUTE_META['project_title']}
-**Application:** {INSTITUTE_META['app_name']} | **Session:** {INSTITUTE_META['session']}
-
-### Group Members
-| Member Name | Roll No. / ID | Email | Contribution |
-| :--- | :--- | :--- | :--- |
-""" + "\n".join(f"| {m[0]} | {m[1]} | {m[2]} | {m[3]} |" for m in TEAM_MEMBERS) + f"""
-
-**Guide:** {INSTITUTE_META['guide']} | **HOD:** {INSTITUTE_META['hod']} | **Institute:** {INSTITUTE_META['institute']}
-
----
-*(Full multi-chapter academic submission generated in `AeroSense_Final_Project_Report.pdf` alongside embedded charts `fig1`–`fig5` and 41/41 pytest verification.)*
-"""
-    md_path.write_text(md_text, encoding="utf-8")
-    return pdf_path, md_path
-
-
-# ---------------------------------------------------------------------------
 # 4. POWERPOINT PRESENTATION (16-SLIDE WIDESCREEN PPTX)
-# ---------------------------------------------------------------------------
 def build_presentation():
     pptx_path = REPORTS_DIR / "AeroSense_Presentation.pptx"
     prs = Presentation()
@@ -775,7 +587,7 @@ def build_presentation():
                 p.font.bold = (r_i == 0)
                 p.font.color.rgb = WHITE if r_i == 0 else NAVY
 
-    # ---- SLIDE 1: TITLE SLIDE ----
+    # SLIDE 1: TITLE SLIDE
     s1 = prs.slides.add_slide(blank)
     _set_bg(s1, DARK_BG)
     accent_bar = s1.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0.7), Inches(0.85), Inches(1.4), Inches(0.08))
@@ -834,7 +646,7 @@ def build_presentation():
     bp2.font.size = Pt(12)
     bp2.font.color.rgb = MUTED
 
-    # ---- SLIDE 2: MOTIVATION ----
+    # SLIDE 2: MOTIVATION
     s2 = prs.slides.add_slide(blank)
     _add_header(s2, "Motivation & Air Quality Urgency", "Why real-time India-first monitoring + predictive forecasting matters", 2)
     _add_card(s2, 0.6, 1.4, 5.9, 2.5, "Severe Respiratory Burden Across India", [
@@ -853,7 +665,7 @@ def build_presentation():
         "3. Incomplete sensor panels often produce misleading AQI numbers without disclosing missing criteria pollutants."
     ], VIOLET)
 
-    # ---- SLIDE 3: PROBLEM STATEMENT & OBJECTIVES ----
+    # SLIDE 3: PROBLEM STATEMENT & OBJECTIVES
     s3 = prs.slides.add_slide(blank)
     _add_header(s3, "Problem Statement & Engineering Objectives", "Building a reproducible, leakage-free air pollution intelligence platform", 3)
     _add_card(s3, 0.6, 1.4, 5.9, 5.3, "Core Objectives", [
@@ -873,7 +685,7 @@ def build_presentation():
         "  • Zero code rewrites needed to analyze US, GB, DE, CN, or global megacities."
     ], VIOLET)
 
-    # ---- SLIDE 4: ARCHITECTURE ----
+    # SLIDE 4: ARCHITECTURE
     s4 = prs.slides.add_slide(blank)
     _add_header(s4, "End-to-End Modular Architecture", "Strict separation of acquisition, engineering, modeling, XAI & UI", 4)
     layers = [
@@ -901,7 +713,7 @@ def build_presentation():
         p2.font.size = Pt(11.5)
         p2.font.color.rgb = RGBColor(226, 232, 240)
 
-    # ---- SLIDE 5: DATA PIPELINE ----
+    # SLIDE 5: DATA PIPELINE
     s5 = prs.slides.add_slide(blank)
     _add_header(s5, "OpenAQ API v3 & Reproducible Data Pipeline", "Real-world sensor ingestion with schema validation & provenance", 5)
     _add_card(s5, 0.6, 1.4, 5.9, 5.3, "OpenAQ v3 Discovery & Sensor Querying", [
@@ -919,7 +731,7 @@ def build_presentation():
         "• Metadata Preservation: Coordinates & station labels carried across resampled hours."
     ], RGBColor(13, 148, 136))
 
-    # ---- SLIDE 6: LIVE TELEMETRY CHART ----
+    # SLIDE 6: LIVE TELEMETRY CHART
     s6 = prs.slides.add_slide(blank)
     _add_header(s6, "Live Indian Air Quality Exploratory Patterns", "30-day OpenAQ v3 multi-station observations (Oct 17 – Nov 16, 2026)", 6)
     s6.shapes.add_picture(str(FIG_DIR / "fig1_live_station_profiles.png"), Inches(0.55), Inches(1.3), width=Inches(12.2))
@@ -927,7 +739,7 @@ def build_presentation():
         "Bimodal diurnal peaks align with morning rush-hour + nocturnal thermal inversion (20:00–23:00 IST), with midday mixing trough (13:00–16:00 IST). Notice Delhi R K Puram surges above 300 µg/m³ in early November."
     ], BLUE)
 
-    # ---- SLIDE 7: AQI ENGINE ----
+    # SLIDE 7: AQI ENGINE
     s7 = prs.slides.add_slide(blank)
     _add_header(s7, "Dual-Standard AQI Intelligence Engine", "Indian CPCB (2014) & US EPA calculators with completeness guarantees", 7)
     s7.shapes.add_picture(str(FIG_DIR / "fig5_aqi_exceedance.png"), Inches(0.55), Inches(1.3), width=Inches(12.2))
@@ -935,7 +747,7 @@ def build_presentation():
         "Piecewise-linear interpolation across 6 categories (Good→Severe). Live stations spent 24.3% in Very Poor and 6.8% in Severe. System explicitly flags partial AQI (is_complete=False) when gaseous co-pollutants are unavailable."
     ], RGBColor(220, 38, 38))
 
-    # ---- SLIDE 8: FEATURES & VALIDATION ----
+    # SLIDE 8: FEATURES & VALIDATION
     s8 = prs.slides.add_slide(blank)
     _add_header(s8, "Feature Engineering & Leakage-Free Validation", "Preventing temporal data leakage in time-series forecasting", 8)
     _add_card(s8, 0.6, 1.4, 5.9, 5.3, "34 Leakage-Free Supervised Features", [
@@ -956,7 +768,7 @@ def build_presentation():
         "  • Held-Out Test: Final 15% (unseen evaluation only)."
     ], VIOLET)
 
-    # ---- SLIDE 9: MODEL ARCHITECTURES ----
+    # SLIDE 9: MODEL ARCHITECTURES
     s9 = prs.slides.add_slide(blank)
     _add_header(s9, "Machine Learning & Deep Learning Model Suite", "Comparing 3 baselines, 6 tabular ML algorithms, and 4 PyTorch architectures", 9)
     arch_tbl = [
@@ -971,7 +783,7 @@ def build_presentation():
     ]
     _add_table(s9, 0.6, 1.5, 12.1, 5.1, arch_tbl, font_pt=12)
 
-    # ---- SLIDE 10: BENCHMARKING RESULTS ----
+    # SLIDE 10: BENCHMARKING RESULTS
     s10 = prs.slides.add_slide(blank)
     _add_header(s10, "Experimental Benchmarking Results", "Controlled 90-day evaluation (n=2,161) on chronological 15% test split", 10)
     s10.shapes.add_picture(str(FIG_DIR / "fig2_model_benchmark.png"), Inches(0.55), Inches(1.25), width=Inches(8.1))
@@ -991,7 +803,7 @@ def build_presentation():
     ]
     _add_table(s10, 8.8, 1.3, 4.0, 5.4, bm_tbl, font_pt=10.5)
 
-    # ---- SLIDE 11: FORECAST & ENGINEERING INSIGHT ----
+    # SLIDE 11: FORECAST & ENGINEERING INSIGHT
     s11 = prs.slides.add_slide(blank)
     _add_header(s11, "Forecast Trajectory & Critical ML Engineering Insights", "Evaluating non-stationary extremes on live Delhi R K Puram telemetry", 11)
     s11.shapes.add_picture(str(FIG_DIR / "fig3_forecast_residuals.png"), Inches(0.55), Inches(1.25), width=Inches(12.2))
@@ -1000,7 +812,7 @@ def build_presentation():
         "• Root Cause: November smog spikes reached 501.0 µg/m³—exceeding training maxima. Decision tree leaves output bounded averages and cannot extrapolate beyond training range, unlike linear autoregressive slopes."
     ], VIOLET)
 
-    # ---- SLIDE 12: EXPLAINABLE AI ----
+    # SLIDE 12: EXPLAINABLE AI
     s12 = prs.slides.add_slide(blank)
     _add_header(s12, "Explainable AI: SHAP & Feature Attributions", "Interpreting atmospheric drivers behind model forecasts", 12)
     s12.shapes.add_picture(str(FIG_DIR / "fig4_shap_importance.png"), Inches(0.55), Inches(1.4), width=Inches(7.7))
@@ -1011,7 +823,7 @@ def build_presentation():
         "• Pipeline Compatibility: Supports TreeExplainer, LinearExplainer (scaled), & Permutation fallback."
     ], RGBColor(13, 148, 136))
 
-    # ---- SLIDE 13: STREAMLIT PLATFORM ----
+    # SLIDE 13: STREAMLIT PLATFORM
     s13 = prs.slides.add_slide(blank)
     _add_header(s13, "10-Page Interactive Streamlit Application Suite", "End-to-end operational access without editing source code", 13)
     pages_tbl = [
@@ -1024,7 +836,7 @@ def build_presentation():
     ]
     _add_table(s13, 0.6, 1.5, 12.1, 5.0, pages_tbl, font_pt=11.5)
 
-    # ---- SLIDE 14: SOFTWARE ENGINEERING & QA ----
+    # SLIDE 14: SOFTWARE ENGINEERING & QA
     s14 = prs.slides.add_slide(blank)
     _add_header(s14, "Software Engineering Rigor & Automated QA", "Verified 41/41 pytest test suite + headless UI & Playwright verification", 14)
     _add_card(s14, 0.6, 1.5, 5.9, 5.1, "41/41 Passing Automated Tests (Pytest)", [
@@ -1043,7 +855,7 @@ def build_presentation():
         "• Reproducible Seed: Fixed ML/DL random seeds (42) + experiment config JSON."
     ], BLUE)
 
-    # ---- SLIDE 15: CONCLUSION & ROADMAP ----
+    # SLIDE 15: CONCLUSION & ROADMAP
     s15 = prs.slides.add_slide(blank)
     _add_header(s15, "Conclusion, Limitations & Phase 2 Roadmap", "Transitioning from India-first hourly forecasting to global multi-modal AI", 15)
     _add_card(s15, 0.6, 1.5, 5.9, 5.1, "Key Contributions & Current Limitations", [
@@ -1058,7 +870,7 @@ def build_presentation():
         "4. Multi-City Expansion: Scale seamlessly across global OpenAQ ISO countries."
     ], VIOLET)
 
-    # ---- SLIDE 16: THANK YOU / Q&A ----
+    # SLIDE 16: THANK YOU / Q&A
     s16 = prs.slides.add_slide(blank)
     _set_bg(s16, DARK_BG)
     tb16 = s16.shapes.add_textbox(Inches(0.8), Inches(1.4), Inches(11.7), Inches(1.8))
@@ -1087,7 +899,6 @@ def build_presentation():
 
     prs.save(str(pptx_path))
     return pptx_path
-
 
 if __name__ == "__main__":
     syn_pdf, syn_md = build_synopsis()

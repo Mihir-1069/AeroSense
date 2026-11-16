@@ -12,7 +12,6 @@ import pandas as pd
 
 log = logging.getLogger(__name__)
 
-
 class PersistenceBaseline:
     """Forecasts = last observed value."""
     name = "Persistence"
@@ -21,7 +20,6 @@ class PersistenceBaseline:
         last = series[-1]
         return np.full(horizon, last, dtype=np.float32)
 
-
 class HistoricalMeanBaseline:
     """Forecasts = mean of training window."""
     name = "Historical Mean"
@@ -29,7 +27,6 @@ class HistoricalMeanBaseline:
     def predict(self, series: np.ndarray, horizon: int = 1) -> np.ndarray:
         mean = float(np.mean(series))
         return np.full(horizon, mean, dtype=np.float32)
-
 
 class SeasonalNaiveBaseline:
     """Forecasts = value from one season (period) ago."""
@@ -47,7 +44,6 @@ class SeasonalNaiveBaseline:
             except IndexError:
                 preds.append(float(series[-1]))
         return np.array(preds, dtype=np.float32)
-
 
 def evaluate_baselines(
     train: np.ndarray,

@@ -12,15 +12,10 @@ import plotly.express as px
 
 from src.config import settings
 
+from src.visualization.theme import apply_theme
+
 st.set_page_config(page_title="Benchmarking — AeroSense AI", page_icon="📊", layout="wide")
-st.markdown("""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-html, body, [class*="css"] { font-family:'Inter',sans-serif; }
-.stApp { background: linear-gradient(135deg,#0D1117,#111827,#0D1117); }
-[data-testid="stSidebar"] { background: linear-gradient(180deg,#0D1117,#161B22); border-right:1px solid #21262D; }
-.section-header { font-size:1.1rem; font-weight:600; color:#00D4FF; border-left:3px solid #00D4FF; padding-left:.75rem; margin:1.5rem 0 .75rem 0; }
-</style>""", unsafe_allow_html=True)
+apply_theme()
 
 st.title("📊 Model Benchmarking")
 st.caption("Compare trained ML and DL models using held-out test split evaluation metrics.")

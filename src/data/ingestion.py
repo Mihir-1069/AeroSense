@@ -27,7 +27,6 @@ PROVENANCE_COLS = [
     "source_provider", "api_endpoint", "retrieved_at",
 ]
 
-
 def _parse_measurement(
     raw: Dict[str, Any],
     location_id: int,
@@ -73,7 +72,6 @@ def _parse_measurement(
         log.debug("Could not parse measurement: %s — %s", raw, exc)
         return None
 
-
 class DataIngestion:
     """Manages data fetching from OpenAQ API and local raw storage."""
 
@@ -81,9 +79,7 @@ class DataIngestion:
         self.client = OpenAQClient(api_key=api_key)
         self.raw_dir = settings.RAW_DIR
 
-    # ------------------------------------------------------------------
     # Country / Location discovery
-    # ------------------------------------------------------------------
     def fetch_countries(self) -> pd.DataFrame:
         log.info("Fetching countries from OpenAQ…")
         countries = self.client.get_countries()
@@ -143,9 +139,7 @@ class DataIngestion:
         self._save_raw(df, f"locations_{country_iso}")
         return df
 
-    # ------------------------------------------------------------------
     # Measurements
-    # ------------------------------------------------------------------
     def fetch_measurements(
         self,
         location_id: int,
@@ -205,18 +199,14 @@ class DataIngestion:
             return pd.DataFrame(columns=PROVENANCE_COLS)
         return pd.concat(frames, ignore_index=True)
 
-    # ------------------------------------------------------------------
     # Date helpers
-    # ------------------------------------------------------------------
     @staticmethod
     def default_date_range(days: int = 30) -> tuple[str, str]:
         now = datetime.now(timezone.utc)
         start = now - timedelta(days=days)
         return start.strftime("%Y-%m-%dT%H:%M:%SZ"), now.strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    # ------------------------------------------------------------------
     # Storage
-    # ------------------------------------------------------------------
     def _save_raw(self, df: pd.DataFrame, name: str) -> Path:
         if df.empty:
             return self.raw_dir

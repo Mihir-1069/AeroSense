@@ -9,7 +9,6 @@ import pytest
 from src.aqi.cpcb import calculate_cpcb_aqi
 from src.aqi.us_epa import calculate_us_epa_aqi
 
-
 class TestCPCBAQI:
     """Tests for Indian Central Pollution Control Board (CPCB) AQI."""
 
@@ -58,7 +57,6 @@ class TestCPCBAQI:
     def test_cpcb_invalid_or_negative(self):
         res = calculate_cpcb_aqi(-10.0, "pm25")
         assert res["aqi"] is None or res["category"] == "Unknown"
-
 
 class TestUSEPAAQI:
     """Tests for US Environmental Protection Agency (EPA) AQI."""

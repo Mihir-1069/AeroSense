@@ -16,7 +16,6 @@ try:
 except ImportError:
     _HAS_COLORLOG = False
 
-
 def setup_logging(
     level: str = "INFO",
     log_dir: Path | None = None,
@@ -64,7 +63,6 @@ def setup_logging(
         root.addHandler(fh)
 
     return logging.getLogger(app_name)
-
 
 def get_logger(name: str) -> logging.Logger:
     """Return a named child logger."""

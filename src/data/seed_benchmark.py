@@ -18,7 +18,6 @@ from src.data.storage import save_processed
 
 logger = logging.getLogger(__name__)
 
-
 def generate_delhi_benchmark(days: int = 90) -> pd.DataFrame:
     """
     Generate an empirically calibrated hourly PM2.5 time-series for
@@ -78,7 +77,6 @@ def generate_delhi_benchmark(days: int = 90) -> pd.DataFrame:
 
     return df
 
-
 def seed_all_benchmarks():
     """Seed processed and raw benchmark files into the data directory."""
     logger.info("Generating Delhi Anand Vihar reference dataset...")
@@ -107,7 +105,6 @@ def seed_all_benchmarks():
     settings.RAW_DIR.mkdir(parents=True, exist_ok=True)
     df.to_parquet(raw_path, index=False)
     print(f"✅ Benchmark raw dataset saved: {raw_path}")
-
 
 if __name__ == "__main__":
     seed_all_benchmarks()

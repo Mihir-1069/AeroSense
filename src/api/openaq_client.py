@@ -15,9 +15,7 @@ from src.config import settings
 
 log = logging.getLogger(__name__)
 
-# ---------------------------------------------------------------------------
 # Custom exceptions
-# ---------------------------------------------------------------------------
 
 class OpenAQError(Exception):
     """Base exception for OpenAQ client errors."""
@@ -37,10 +35,7 @@ class OpenAQServerError(OpenAQError):
 class OpenAQConnectionError(OpenAQError):
     """Network/timeout error."""
 
-
-# ---------------------------------------------------------------------------
 # Client
-# ---------------------------------------------------------------------------
 
 class OpenAQClient:
     """
@@ -66,9 +61,7 @@ class OpenAQClient:
         self._last_error: Optional[str] = None
         self._request_count: int = 0
 
-    # ------------------------------------------------------------------
     # Auth headers
-    # ------------------------------------------------------------------
     @property
     def _headers(self) -> Dict[str, str]:
         h: Dict[str, str] = {"Accept": "application/json"}
@@ -76,9 +69,7 @@ class OpenAQClient:
             h["X-API-Key"] = self._api_key
         return h
 
-    # ------------------------------------------------------------------
     # Core request with retry
-    # ------------------------------------------------------------------
     def _request(
         self,
         method: str,
@@ -141,9 +132,7 @@ class OpenAQClient:
             raise OpenAQServerError(f"Server error HTTP {code}: {resp.text[:200]}")
         raise OpenAQError(f"Unexpected HTTP {code}: {resp.text[:200]}")
 
-    # ------------------------------------------------------------------
     # Paginated helper
-    # ------------------------------------------------------------------
     def _paginate(
         self,
         endpoint: str,
@@ -179,9 +168,7 @@ class OpenAQClient:
 
         return all_results
 
-    # ------------------------------------------------------------------
     # API methods
-    # ------------------------------------------------------------------
 
     def test_connection(self) -> Dict[str, Any]:
         """
@@ -208,7 +195,7 @@ class OpenAQClient:
             result["message"] = f"Unexpected error: {e}"
         return result
 
-    # ---- Countries -------------------------------------------------------
+    # Countries
     def get_countries(self, limit: int = 200) -> List[Dict[str, Any]]:
         """Return all available countries."""
         return self._paginate("/countries", params={"limit": limit})
@@ -217,7 +204,7 @@ class OpenAQClient:
         """Alias for get_countries."""
         return self.get_countries(limit=limit)
 
-    # ---- Locations -------------------------------------------------------
+    # Locations
     def get_locations(
         self,
         country: Optional[str] = None,
@@ -240,13 +227,13 @@ class OpenAQClient:
     def get_location(self, location_id: int) -> Dict[str, Any]:
         return self._request("GET", f"/locations/{location_id}")
 
-    # ---- Parameters / Pollutants ----------------------------------------
+    # Parameters / Pollutants
     def get_parameters(self) -> List[Dict[str, Any]]:
         """Return all supported measurement parameters (pollutants)."""
         data = self._request("GET", "/parameters", params={"limit": 100})
         return data.get("results", [])
 
-    # ---- Sensor Measurements (OpenAQ v3) --------------------------------
+    # Sensor Measurements (OpenAQ v3)
     def get_sensor_hours(
         self,
         sensor_id: int,
@@ -335,12 +322,12 @@ class OpenAQClient:
         data = self._request("GET", f"/locations/{location_id}/latest")
         return data.get("results", [])
 
-    # ---- Sensors --------------------------------------------------------
+    # Sensors
     def get_sensors(self, location_id: int) -> List[Dict[str, Any]]:
         data = self._request("GET", f"/locations/{location_id}/sensors")
         return data.get("results", [])
 
-    # ---- Countries by ISO -----------------------------------------------
+    # Countries by ISO
     def get_country_by_iso(self, iso: str) -> Optional[Dict[str, Any]]:
         try:
             data = self._request("GET", "/countries", params={"limit": 1, "iso": iso})
@@ -349,7 +336,7 @@ class OpenAQClient:
         except Exception:
             return None
 
-    # ---- Cities ---------------------------------------------------------
+    # Cities
     def get_cities(self, country_iso: str, limit: int = 500) -> List[Dict[str, Any]]:
         """Return distinct cities for a country (derived from location metadata)."""
         locations = self.get_locations(country=country_iso, limit=limit)
@@ -362,7 +349,7 @@ class OpenAQClient:
                 cities.append({"city": city, "country": country_iso})
         return sorted(cities, key=lambda x: x["city"])
 
-    # ---- Parameter ID resolver ------------------------------------------
+    # Parameter ID resolver
     _PARAM_NAME_TO_ID: Dict[str, int] = {
         # These are common OpenAQ v3 parameter IDs; may differ per deployment.
         "pm25": 2,
@@ -377,7 +364,7 @@ class OpenAQClient:
     def _resolve_parameter_id(self, name: str) -> int:
         return self._PARAM_NAME_TO_ID.get(name.lower(), 2)
 
-    # ---- Status ---------------------------------------------------------
+    # Status
     @property
     def status(self) -> Dict[str, Any]:
         return {

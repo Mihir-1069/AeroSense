@@ -12,7 +12,6 @@ import pytest
 from src.features.feature_engineering import build_feature_matrix, FEATURE_COLUMNS
 from src.features.sequence_builder import build_sequences
 
-
 @pytest.fixture
 def sample_timeseries():
     """Create a synthetic 100-hour continuous series."""
@@ -24,7 +23,6 @@ def sample_timeseries():
         "location_id": 1,
         "parameter": "pm25",
     })
-
 
 def test_build_feature_matrix_shapes(sample_timeseries):
     feat_df = build_feature_matrix(sample_timeseries)
@@ -40,7 +38,6 @@ def test_build_feature_matrix_shapes(sample_timeseries):
     # Check rolling features
     assert "roll_mean_6" in feat_df.columns
     assert "roll_mean_24" in feat_df.columns
-
 
 def test_build_sequences_dl():
     values = np.arange(100, dtype=np.float32)

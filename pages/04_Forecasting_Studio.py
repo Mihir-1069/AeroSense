@@ -17,26 +17,16 @@ from src.ml.train import train_models, load_model, predict as ml_predict
 from src.ml.baselines import evaluate_baselines
 from src.visualization.charts import forecast_chart, loss_curves
 
+from src.visualization.theme import apply_theme
+
 st.set_page_config(page_title="Forecasting Studio — AeroSense AI", page_icon="🔮", layout="wide")
 
-st.markdown("""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-html, body, [class*="css"] { font-family:'Inter',sans-serif; }
-.stApp { background: linear-gradient(135deg,#0D1117,#111827,#0D1117); }
-[data-testid="stSidebar"] { background: linear-gradient(180deg,#0D1117,#161B22); border-right:1px solid #21262D; }
-.section-header { font-size:1.1rem; font-weight:600; color:#00D4FF; border-left:3px solid #00D4FF; padding-left:.75rem; margin:1.5rem 0 .75rem 0; }
-.kpi-card { background:linear-gradient(135deg,#161B22,#21262D); border:1px solid #30363D; border-radius:12px; padding:1rem; text-align:center; }
-.kpi-value { font-size:1.6rem; font-weight:700; color:#00D4FF; }
-.kpi-label { font-size:.72rem; color:#8B949E; text-transform:uppercase; letter-spacing:.08em; }
-</style>""", unsafe_allow_html=True)
+apply_theme()
 
 st.title("🔮 Forecasting Studio")
 st.caption("Train traditional ML and deep learning models on collected air quality data.")
 
-# ---------------------------------------------------------------------------
 # Sidebar
-# ---------------------------------------------------------------------------
 with st.sidebar:
     st.markdown("### ⚙️ Training Configuration")
     processed_files = list_processed_files()
@@ -61,9 +51,7 @@ with st.sidebar:
 
     train_btn = st.button("🚀 Train Models", type="primary", use_container_width=True)
 
-# ---------------------------------------------------------------------------
 # Load data
-# ---------------------------------------------------------------------------
 df = load_processed(dataset_name)
 if df is None or df.empty:
     st.error("Could not load selected dataset.")
@@ -88,9 +76,7 @@ if len(df) < 50:
     )
     st.stop()
 
-# ---------------------------------------------------------------------------
 # Training
-# ---------------------------------------------------------------------------
 if "train_results" not in st.session_state:
     st.session_state.train_results = None
 if "dl_result" not in st.session_state:
@@ -149,9 +135,7 @@ if train_btn:
         st.session_state.dl_result = all_dl_results
         st.session_state.train_results = None
 
-# ---------------------------------------------------------------------------
 # Results display
-# ---------------------------------------------------------------------------
 if st.session_state.train_results is not None:
     st.markdown('<div class="section-header">📊 ML Results</div>', unsafe_allow_html=True)
     res = st.session_state.train_results

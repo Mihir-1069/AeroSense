@@ -12,7 +12,6 @@ from streamlit.testing.v1 import AppTest
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 PAGE_FILES = [PROJECT_ROOT / "app.py"] + sorted((PROJECT_ROOT / "pages").glob("*.py"))
 
-
 @pytest.mark.parametrize("page_path", PAGE_FILES, ids=lambda p: p.name)
 def test_streamlit_page_renders_without_exception(page_path: Path):
     at = AppTest.from_file(str(page_path), default_timeout=30)

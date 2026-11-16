@@ -15,24 +15,16 @@ import pandas as pd
 from src.config import settings
 from src.api.openaq_client import OpenAQClient
 
+from src.visualization.theme import apply_theme
+
 st.set_page_config(page_title="System Diagnostics — AeroSense AI", page_icon="🛠️", layout="wide")
 
-st.markdown("""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-html, body, [class*="css"] { font-family:'Inter',sans-serif; }
-.stApp { background: linear-gradient(135deg,#0D1117,#111827,#0D1117); }
-[data-testid="stSidebar"] { background: linear-gradient(180deg,#0D1117,#161B22); border-right:1px solid #21262D; }
-.section-header { font-size:1.1rem; font-weight:600; color:#00D4FF; border-left:3px solid #00D4FF; padding-left:.75rem; margin:1.5rem 0 .75rem 0; }
-.kpi-card { background:linear-gradient(135deg,#161B22,#21262D); border:1px solid #30363D; border-radius:12px; padding:1.2rem; }
-</style>""", unsafe_allow_html=True)
+apply_theme()
 
 st.title("🛠️ System Diagnostics & Settings")
 st.caption("Configure OpenAQ v3 API credentials, verify live connectivity, inspect hardware, and monitor runtime telemetry.")
 
-# ---------------------------------------------------------------------------
 # API Key Configuration (.env Management)
-# ---------------------------------------------------------------------------
 st.markdown('<div class="section-header">🔑 OpenAQ v3 API Key & Configuration</div>', unsafe_allow_html=True)
 
 col_key1, col_key2 = st.columns([2, 1])
@@ -86,9 +78,7 @@ with col_key2:
 </div>
 """, unsafe_allow_html=True)
 
-# ---------------------------------------------------------------------------
 # API Connectivity Section
-# ---------------------------------------------------------------------------
 st.markdown('<div class="section-header">🌐 OpenAQ v3 API Connectivity Audit</div>', unsafe_allow_html=True)
 
 c1, c2, c3 = st.columns([1, 1, 2])
@@ -112,9 +102,7 @@ with c3:
             else:
                 st.error(f"❌ Connection failed: {res.get('message', 'Unknown error')}")
 
-# ---------------------------------------------------------------------------
 # Hardware & Acceleration
-# ---------------------------------------------------------------------------
 st.markdown('<div class="section-header">⚡ Compute Hardware & Deep Learning Acceleration</div>', unsafe_allow_html=True)
 
 try:
@@ -133,11 +121,8 @@ hw2.metric("Python Runtime", platform.python_version())
 hw3.metric("PyTorch Engine", torch_version)
 hw4.metric("Acceleration Device", "CUDA GPU" if cuda_avail else "CPU Engine", device_name[:22])
 
-# ---------------------------------------------------------------------------
 # Storage & Disk Footprint
-# ---------------------------------------------------------------------------
 st.markdown('<div class="section-header">💾 Persistent Storage & Artifact Inventory</div>', unsafe_allow_html=True)
-
 
 def get_dir_stats(path: Path):
     if not path.exists():
@@ -145,7 +130,6 @@ def get_dir_stats(path: Path):
     files = [f for f in path.rglob("*") if f.is_file()]
     total_size = sum(f.stat().st_size for f in files)
     return len(files), total_size / (1024 * 1024)
-
 
 dirs_to_check = [
     ("Raw Ingestion Data", settings.RAW_DIR),
@@ -173,9 +157,7 @@ for label, p in dirs_to_check:
 
 st.dataframe(pd.DataFrame(storage_data), use_container_width=True, hide_index=True)
 
-# ---------------------------------------------------------------------------
 # Cache & Memory Management
-# ---------------------------------------------------------------------------
 st.markdown('<div class="section-header">🧹 Cache & Memory Governance</div>', unsafe_allow_html=True)
 cm1, cm2 = st.columns(2)
 
@@ -196,9 +178,7 @@ with cm2:
                     count += 1
             st.success(f"Cleaned {count} temporary export file(s).")
 
-# ---------------------------------------------------------------------------
 # Live Log Streamer
-# ---------------------------------------------------------------------------
 st.markdown('<div class="section-header">📜 Runtime Logs (Tail 30 Entries)</div>', unsafe_allow_html=True)
 
 log_files = sorted(settings.LOGS_DIR.glob("*.log")) if settings.LOGS_DIR.exists() else []

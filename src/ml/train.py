@@ -33,7 +33,6 @@ except ImportError:
     _HAS_XGB = False
     log.warning("XGBoost not available. Skipping XGBRegressor.")
 
-
 def _get_models() -> Dict[str, Any]:
     models: Dict[str, Any] = {
         "LinearRegression": Pipeline([
@@ -62,7 +61,6 @@ def _get_models() -> Dict[str, Any]:
         )
     return models
 
-
 def chronological_split_df(
     df: pd.DataFrame,
     train_ratio: float = settings.TRAIN_RATIO,
@@ -78,7 +76,6 @@ def chronological_split_df(
     log.info("Split: train=%d, val=%d, test=%d", len(train), len(val), len(test))
     return train, val, test
 
-
 def compute_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> Dict[str, float]:
     mae  = float(np.mean(np.abs(y_true - y_pred)))
     rmse = float(np.sqrt(np.mean((y_true - y_pred) ** 2)))
@@ -91,7 +88,6 @@ def compute_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> Dict[str, float]:
            if nonzero.any() else float("nan")
     return {"MAE": round(mae, 3), "RMSE": round(rmse, 3),
             "R2": round(r2, 3), "MAPE": round(mape, 2)}
-
 
 def train_models(
     df: pd.DataFrame,
@@ -193,14 +189,12 @@ def train_models(
             log.warning("Could not save benchmark CSV: %s", exc)
     return res_df
 
-
 def load_model(name: str, model_dir: Optional[Path] = None) -> Optional[Dict[str, Any]]:
     d = model_dir or settings.ML_MODELS_DIR
     path = d / f"{name}.pkl"
     if not path.exists():
         return None
     return joblib.load(path)
-
 
 def predict(
     model_dict: Dict[str, Any],

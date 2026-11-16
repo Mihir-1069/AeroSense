@@ -14,7 +14,6 @@ log = logging.getLogger(__name__)
 
 ImputeStrategy = Literal["forward_fill", "interpolate", "station_median", "none"]
 
-
 def clean_measurements(
     df: pd.DataFrame,
     impute: ImputeStrategy = "interpolate",
@@ -40,7 +39,7 @@ def clean_measurements(
     df = df.sort_values(["location_id", "parameter", "datetime_utc"]).reset_index(drop=True)
     df["is_imputed"] = False
 
-    # --- Outlier removal (IQR × 3 per location-parameter) -----------------
+    # Outlier removal (IQR × 3 per location-parameter)
     if "location_id" in df.columns and "parameter" in df.columns and len(df) >= 4:
         try:
             q1 = df.groupby(["location_id", "parameter"])["value"].transform(lambda s: s.quantile(0.25))
@@ -56,7 +55,7 @@ def clean_measurements(
     if impute == "none" or df.empty:
         return df
 
-    # --- Imputation per location-parameter --------------------------------
+    # Imputation per location-parameter
     groups = []
     group_cols = [c for c in ["location_id", "parameter"] if c in df.columns]
 
@@ -112,7 +111,6 @@ def clean_measurements(
     log.info("Cleaning complete: %d values imputed (strategy=%s).", imputed_count, impute)
     return df
 
-
 def normalise_units(df: pd.DataFrame) -> pd.DataFrame:
     """
     Ensure all PM values are in µg/m³.
@@ -136,7 +134,6 @@ def normalise_units(df: pd.DataFrame) -> pd.DataFrame:
                 df.loc[m, "value"] *= factor
                 df.loc[m, "unit"] = "µg/m³"
     return df
-
 
 # Alias for backward compatibility
 clean_dataset = clean_measurements

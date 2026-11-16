@@ -28,7 +28,6 @@ plt.rcParams.update({
     "axes.linewidth": 0.8,
 })
 
-
 def generate_all_figures() -> dict[str, Path]:
     paths: dict[str, Path] = {}
 
@@ -38,9 +37,7 @@ def generate_all_figures() -> dict[str, Path]:
     live_csv = settings.PROJECT_ROOT / "experiments" / "results" / "live_rkp_benchmark.csv"
     dl_csv = settings.PROJECT_ROOT / "experiments" / "results" / "dl_h1_benchmark.csv"
 
-    # ------------------------------------------------------------------
     # Fig 1: Live OpenAQ India Multi-Station Time Series & Diurnal Cycle
-    # ------------------------------------------------------------------
     if live is not None and not live.empty:
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4.5), dpi=300)
         colors = ["#0284C7", "#EA580C", "#16A34A"]
@@ -77,9 +74,7 @@ def generate_all_figures() -> dict[str, Path]:
         plt.close(fig)
         paths["fig1"] = p1
 
-    # ------------------------------------------------------------------
     # Fig 2: Held-Out Test Benchmark Comparison (ML + DL 1-step & Live)
-    # ------------------------------------------------------------------
     if ml_csv.exists():
         ml_df = pd.read_csv(ml_csv)
         frames = [ml_df[["model", "test_MAE", "test_RMSE", "test_R2"]].assign(Family="ML (Tabular)")]
@@ -120,9 +115,7 @@ def generate_all_figures() -> dict[str, Path]:
         plt.close(fig)
         paths["fig2"] = p2
 
-    # ------------------------------------------------------------------
     # Fig 3: Actual vs Forecast + Residual Diagnostics (Held-Out Test Split)
-    # ------------------------------------------------------------------
     if bench is not None and not bench.empty:
         feat_df = build_feature_matrix(bench)
         lr_dict = load_model("LinearRegression")
@@ -162,9 +155,7 @@ def generate_all_figures() -> dict[str, Path]:
             plt.close(fig)
             paths["fig3"] = p3
 
-            # ------------------------------------------------------------------
             # Fig 4: SHAP Feature Attribution Bar Chart
-            # ------------------------------------------------------------------
             sv_res = shap_values(rf_dict, X_te, max_samples=min(120, len(X_te)))
             if sv_res is not None:
                 sv, _ = sv_res
@@ -187,9 +178,7 @@ def generate_all_figures() -> dict[str, Path]:
                 plt.close(fig)
                 paths["fig4"] = p4
 
-    # ------------------------------------------------------------------
     # Fig 5: Live CPCB AQI Category Breakdown & WHO/NAAQS Breach Rates
-    # ------------------------------------------------------------------
     if live is not None and not live.empty:
         valid_live = live.dropna(subset=["value"]).copy()
         cats = [calculate_cpcb_aqi(v, "pm25").category for v in valid_live["value"]]
@@ -244,7 +233,6 @@ def generate_all_figures() -> dict[str, Path]:
         paths["fig5"] = p5
 
     return paths
-
 
 if __name__ == "__main__":
     out = generate_all_figures()

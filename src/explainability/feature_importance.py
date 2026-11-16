@@ -12,7 +12,6 @@ import pandas as pd
 
 log = logging.getLogger(__name__)
 
-
 def get_feature_importance(model_dict: Dict, top_n: int = 20) -> Optional[pd.DataFrame]:
     """
     Extract feature importance from tree-based models.
@@ -47,7 +46,6 @@ def get_feature_importance(model_dict: Dict, top_n: int = 20) -> Optional[pd.Dat
     df["importance_pct"] = df["importance"] / df["importance"].sum() * 100
     return df
 
-
 def permutation_importance(
     model_dict: Dict,
     X: np.ndarray,
@@ -69,7 +67,6 @@ def permutation_importance(
     except Exception as exc:
         log.warning("Permutation importance failed: %s", exc)
         return None
-
 
 def shap_values(
     model_dict: Dict,
@@ -119,7 +116,6 @@ def shap_values(
     except Exception as exc:
         log.warning("SHAP computation failed: %s", exc)
         return None
-
 
 def residual_analysis(
     y_true: np.ndarray,

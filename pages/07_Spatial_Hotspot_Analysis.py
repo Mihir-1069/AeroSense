@@ -16,19 +16,11 @@ from src.config import settings
 from src.data.storage import load_processed, list_processed_files
 from src.visualization.charts import map_scatter, PLOTLY_TEMPLATE, PALETTE
 
+from src.visualization.theme import apply_theme
+
 st.set_page_config(page_title="Spatial Analysis — AeroSense AI", page_icon="🗺️", layout="wide")
 
-st.markdown("""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-html, body, [class*="css"] { font-family:'Inter',sans-serif; }
-.stApp { background: linear-gradient(135deg,#0D1117,#111827,#0D1117); }
-[data-testid="stSidebar"] { background: linear-gradient(180deg,#0D1117,#161B22); border-right:1px solid #21262D; }
-.section-header { font-size:1.1rem; font-weight:600; color:#00D4FF; border-left:3px solid #00D4FF; padding-left:.75rem; margin:1.5rem 0 .75rem 0; }
-.kpi-card { background:linear-gradient(135deg,#161B22,#21262D); border:1px solid #30363D; border-radius:12px; padding:1rem; text-align:center; }
-.kpi-value { font-size:1.6rem; font-weight:700; color:#00D4FF; }
-.kpi-label { font-size:.72rem; color:#8B949E; text-transform:uppercase; letter-spacing:.08em; }
-</style>""", unsafe_allow_html=True)
+apply_theme()
 
 st.title("🗺️ Spatial & Hotspot Analysis")
 st.caption("Identify geographic pollution clusters, spatial dispersion, and regional severity across monitoring stations.")

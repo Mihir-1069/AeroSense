@@ -20,7 +20,6 @@ from src.ml.train import train_models, load_model
 from src.features.feature_engineering import build_feature_matrix, FEATURE_COLUMNS
 from src.reporting.report_generator import generate_pdf_report
 
-
 def test_openaq_v3_locations_and_pagination():
     """Verify v3 iso query parameter and safe parsing of string meta.found='>1000'."""
     client = OpenAQClient(api_key="dummy-key")
@@ -39,7 +38,6 @@ def test_openaq_v3_locations_and_pagination():
         call_kwargs = mock_http.return_value.__enter__.return_value.request.call_args.kwargs
         assert call_kwargs["params"]["iso"] == "IN"
         assert call_kwargs["params"]["parameters_id"] == 2
-
 
 def test_openaq_v3_sensor_hours():
     """Verify v3 /sensors/{id}/hours uses datetime_from and datetime_to."""
@@ -65,7 +63,6 @@ def test_openaq_v3_sensor_hours():
         assert "/sensors/999/hours" in call_args.args[1]
         assert call_args.kwargs["params"]["datetime_from"] == "2026-01-01T00:00:00Z"
 
-
 def test_openaq_auth_error():
     client = OpenAQClient(api_key="bad-key")
     mock_resp = MagicMock()
@@ -76,7 +73,6 @@ def test_openaq_auth_error():
         mock_http.return_value.__enter__.return_value.request.return_value = mock_resp
         with pytest.raises(OpenAQAuthError):
             client.get_countries()
-
 
 def test_explainability_across_model_families(tmp_path):
     """Test feature importance, permutation importance, and SHAP on Ridge, RandomForest, and HistGradientBoosting."""
@@ -112,7 +108,6 @@ def test_explainability_across_model_families(tmp_path):
         assert sv_res is not None
         sv, _ = sv_res
         assert sv.shape[0] == 15
-
 
 def test_pdf_report_generation(tmp_path):
     dts = pd.date_range("2026-01-01", periods=48, freq="h", tz="UTC")

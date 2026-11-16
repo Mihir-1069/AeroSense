@@ -8,11 +8,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
 
-# ---------------------------------------------------------------------------
 # Breakpoint tables — (C_lo, C_hi, I_lo, I_hi)
 # PM2.5: µg/m³ 24-h avg; PM10: µg/m³ 24-h avg
 # O3: ppm 8-h avg; NO2: ppb 1-h avg; SO2: ppb 1-h avg; CO: ppm 8-h avg
-# ---------------------------------------------------------------------------
 EPA_BREAKPOINTS: Dict[str, List[Tuple[float, float, int, int]]] = {
     "pm25": [
         (0.0,   12.0,   0,  50),
@@ -77,14 +75,12 @@ EPA_CATEGORIES = [
     (301, 500, "Hazardous",             "maroon",  "Emergency health warning."),
 ]
 
-
 @dataclass
 class EpaSubIndex:
     pollutant: str
     concentration: float
     sub_index: int
     unit: str
-
 
 @dataclass
 class EpaAQIResult:
@@ -111,10 +107,8 @@ class EpaAQIResult:
     def get(self, item, default=None):
         return getattr(self, item, default)
 
-
 def _epa_interp(c: float, c_lo: float, c_hi: float, i_lo: int, i_hi: int) -> int:
     return round(((i_hi - i_lo) / (c_hi - c_lo)) * (c - c_lo) + i_lo)
-
 
 def calculate_epa_sub_index(pollutant: str, concentration: float) -> Optional[Tuple[int, str]]:
     """Return (sub_index, unit_label) or None."""
@@ -132,13 +126,11 @@ def calculate_epa_sub_index(pollutant: str, concentration: float) -> Optional[Tu
         return 500, unit
     return None
 
-
 def _get_epa_category(aqi: int) -> Tuple[str, str, str]:
     for lo, hi, cat, color, msg in EPA_CATEGORIES:
         if lo <= aqi <= hi:
             return cat, color, msg
     return "Hazardous", "maroon", "Emergency health warning."
-
 
 def calculate_epa_aqi(
     measurements: Dict[str, float] | float,
@@ -195,7 +187,6 @@ def calculate_epa_aqi(
         sub_indices=sub_indices, is_complete=len(missing) == 0,
         missing_pollutants=missing, calculated_pollutants=computed,
     )
-
 
 # Alias for backward compatibility
 calculate_us_epa_aqi = calculate_epa_aqi

@@ -26,7 +26,6 @@ PARAM_RANGES = {
 
 REQUIRED_COLS = {"value", "datetime_utc", "parameter", "location_id"}
 
-
 @dataclass
 class ValidationReport:
     total_records: int = 0
@@ -52,7 +51,6 @@ class ValidationReport:
             f"Duplicates={self.duplicates}"
         )
 
-
 def validate_measurements(df: pd.DataFrame) -> tuple[pd.DataFrame, ValidationReport]:
     """
     Validate a measurements DataFrame.
@@ -65,7 +63,7 @@ def validate_measurements(df: pd.DataFrame) -> tuple[pd.DataFrame, ValidationRep
     if df.empty:
         return df, report
 
-    # -- Required columns ---------------------------------------------------
+    # Required columns
     missing_cols = REQUIRED_COLS - set(df.columns)
     if missing_cols:
         report.warnings.append(f"Missing required columns: {missing_cols}")
@@ -73,7 +71,7 @@ def validate_measurements(df: pd.DataFrame) -> tuple[pd.DataFrame, ValidationRep
         for col in missing_cols:
             df[col] = np.nan
 
-    # -- Datetime -----------------------------------------------------------
+    # Datetime
     mask_no_dt = df["datetime_utc"].isna() | (df["datetime_utc"] == "")
     report.missing_datetime = int(mask_no_dt.sum())
     df = df[~mask_no_dt].copy()
@@ -83,13 +81,13 @@ def validate_measurements(df: pd.DataFrame) -> tuple[pd.DataFrame, ValidationRep
     report.missing_datetime += int(still_bad.sum())
     df = df[~still_bad].copy()
 
-    # -- Value --------------------------------------------------------------
+    # Value
     df["value"] = pd.to_numeric(df["value"], errors="coerce")
     mask_no_val = df["value"].isna()
     report.missing_value = int(mask_no_val.sum())
     df = df[~mask_no_val].copy()
 
-    # -- Range check --------------------------------------------------------
+    # Range check
     if "parameter" in df.columns:
         def _in_range(row):
             lo, hi = PARAM_RANGES.get(str(row["parameter"]).lower(), (0, 1e9))
@@ -99,7 +97,7 @@ def validate_measurements(df: pd.DataFrame) -> tuple[pd.DataFrame, ValidationRep
         report.invalid_range = int((~mask_range).sum())
         df = df[mask_range].copy()
 
-    # -- Duplicates ---------------------------------------------------------
+    # Duplicates
     dup_cols = ["location_id", "parameter", "datetime_utc"]
     dup_cols = [c for c in dup_cols if c in df.columns]
     before = len(df)

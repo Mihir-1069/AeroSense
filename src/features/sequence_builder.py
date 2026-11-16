@@ -13,7 +13,6 @@ from sklearn.preprocessing import MinMaxScaler
 
 log = logging.getLogger(__name__)
 
-
 def build_sequences(
     series: pd.Series,
     lookback: int = 24,
@@ -44,7 +43,6 @@ def build_sequences(
     log.debug("Sequences: X=%s, y=%s", X_arr.shape, y_arr.shape)
     return X_arr, y_arr
 
-
 def chronological_split(
     X: np.ndarray,
     y: np.ndarray,
@@ -62,7 +60,6 @@ def chronological_split(
         "Split: train=%d, val=%d, test=%d", len(X_train), len(X_val), len(X_test)
     )
     return (X_train, y_train), (X_val, y_val), (X_test, y_test)
-
 
 def fit_scaler(values: np.ndarray) -> Tuple[np.ndarray, MinMaxScaler]:
     """Fit MinMaxScaler on training values and return scaled + scaler."""

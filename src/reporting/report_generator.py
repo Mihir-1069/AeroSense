@@ -21,7 +21,6 @@ from src.aqi.us_epa import calculate_us_epa_aqi
 
 logger = logging.getLogger(__name__)
 
-
 def compute_dataset_summary(df: pd.DataFrame) -> Dict[str, Any]:
     """Compute comprehensive descriptive and AQI statistics for a dataset."""
     if df is None or df.empty or "value" not in df.columns:
@@ -102,7 +101,6 @@ def compute_dataset_summary(df: pd.DataFrame) -> Dict[str, Any]:
         stats["epa_distribution"] = {}
 
     return stats
-
 
 def generate_markdown_report(
     dataset_name: str,
@@ -241,7 +239,6 @@ def generate_markdown_report(
 
     md.append("\n---\n*Report generated automatically by AeroSense AI Platform. Approved for B.Tech project submission and research review.*")
     return "\n".join(md)
-
 
 def generate_html_report(
     dataset_name: str,
@@ -387,7 +384,6 @@ def generate_html_report(
 """
     return html_doc
 
-
 def generate_pdf_report(
     dataset_name: str,
     df: pd.DataFrame,
@@ -523,7 +519,6 @@ def generate_pdf_report(
     doc.build(elements)
     logger.info(f"PDF report successfully built at: {output_path}")
     return output_path
-
 
 def create_export_archive(
     dataset_name: str,

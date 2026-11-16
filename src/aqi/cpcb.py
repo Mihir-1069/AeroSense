@@ -10,12 +10,10 @@ from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 
-# ---------------------------------------------------------------------------
 # Breakpoint tables — (BPlo, BPhi, Ilo, Ihi) per pollutant
 # Units:  PM2.5 µg/m³ 24h avg, PM10 µg/m³ 24h avg
 #         NO2 µg/m³ 24h avg, SO2 µg/m³ 24h avg
 #         CO mg/m³ 8h avg, O3 µg/m³ 8h avg, NH3 µg/m³ 24h avg
-# ---------------------------------------------------------------------------
 CPCB_BREAKPOINTS: Dict[str, List[Tuple[float, float, int, int]]] = {
     "pm25": [
         (0, 30,   0,  50),
@@ -76,7 +74,6 @@ CPCB_CATEGORIES = [
     (401, 500, "Severe",        "Affects healthy people; serious risk for diseased."),
 ]
 
-
 CPCB_COLORS = {
     "Good": "#00E400",
     "Satisfactory": "#92D050",
@@ -88,14 +85,12 @@ CPCB_COLORS = {
     "Unknown": "#808080",
 }
 
-
 @dataclass
 class SubIndex:
     pollutant: str
     concentration: float
     sub_index: int
     unit: str = "µg/m³"
-
 
 @dataclass
 class CpcbAQIResult:
@@ -128,11 +123,9 @@ class CpcbAQIResult:
     def get(self, item, default=None):
         return getattr(self, item, default)
 
-
 def _linear_interpolate(c: float, bp_lo: float, bp_hi: float, i_lo: int, i_hi: int) -> int:
     """Piecewise linear interpolation per CPCB formula."""
     return round(((i_hi - i_lo) / (bp_hi - bp_lo)) * (c - bp_lo) + i_lo)
-
 
 def calculate_sub_index(pollutant: str, concentration: float) -> Optional[int]:
     """Calculate sub-index for a single pollutant."""
@@ -146,13 +139,11 @@ def calculate_sub_index(pollutant: str, concentration: float) -> Optional[int]:
         return 500
     return None
 
-
 def _get_category(aqi: int) -> Tuple[str, str]:
     for lo, hi, cat, msg in CPCB_CATEGORIES:
         if lo <= aqi <= hi:
             return cat, msg
     return "Severe", "Hazardous conditions."
-
 
 def calculate_cpcb_aqi(
     measurements: Dict[str, float] | float,

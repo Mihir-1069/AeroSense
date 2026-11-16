@@ -39,7 +39,6 @@ AQI_COLORS = {
 
 PLOTLY_TEMPLATE = "plotly_dark"
 
-
 def _base_layout(**kwargs) -> dict:
     return dict(
         template=PLOTLY_TEMPLATE,
@@ -49,7 +48,6 @@ def _base_layout(**kwargs) -> dict:
         margin=dict(l=50, r=30, t=50, b=50),
         **kwargs,
     )
-
 
 def time_series_chart(
     df: pd.DataFrame,
@@ -70,7 +68,6 @@ def time_series_chart(
     fig.update_layout(**_base_layout(height=height))
     fig.update_traces(line_width=1.5)
     return fig
-
 
 def forecast_chart(
     historical_df: pd.DataFrame,
@@ -112,7 +109,6 @@ def forecast_chart(
     )
     return fig
 
-
 def aqi_gauge(aqi: int, standard: str = "CPCB") -> go.Figure:
     max_val = 500
     fig = go.Figure(go.Indicator(
@@ -138,7 +134,6 @@ def aqi_gauge(aqi: int, standard: str = "CPCB") -> go.Figure:
     fig.update_layout(**_base_layout(height=280))
     return fig
 
-
 def correlation_heatmap(corr: pd.DataFrame, title: str = "Correlation Matrix") -> go.Figure:
     fig = px.imshow(
         corr, text_auto=".2f", aspect="auto",
@@ -147,7 +142,6 @@ def correlation_heatmap(corr: pd.DataFrame, title: str = "Correlation Matrix") -
     )
     fig.update_layout(**_base_layout(height=400))
     return fig
-
 
 def bar_chart(
     df: pd.DataFrame,
@@ -168,7 +162,6 @@ def bar_chart(
     fig.update_layout(**_base_layout(height=height))
     return fig
 
-
 def box_plot(
     df: pd.DataFrame,
     x_col: str,
@@ -187,7 +180,6 @@ def box_plot(
     fig.update_layout(**_base_layout(height=height))
     return fig
 
-
 def scatter_plot(
     df: pd.DataFrame,
     x_col: str,
@@ -205,7 +197,6 @@ def scatter_plot(
     )
     fig.update_layout(**_base_layout(height=height))
     return fig
-
 
 def map_scatter(
     df: pd.DataFrame,
@@ -238,7 +229,6 @@ def map_scatter(
     )
     return fig
 
-
 def feature_importance_bar(
     df: pd.DataFrame,
     title: str = "Feature Importance",
@@ -256,7 +246,6 @@ def feature_importance_bar(
     fig.update_yaxes(autorange="reversed")
     return fig
 
-
 def residual_plot(
     df: pd.DataFrame,
     x_col: str = "actual",
@@ -273,7 +262,6 @@ def residual_plot(
     fig.add_hline(y=0, line_dash="dash", line_color=PALETTE["muted"])
     fig.update_layout(**_base_layout(height=height))
     return fig
-
 
 def loss_curves(history: dict, title: str = "Training Loss", height: int = 300) -> go.Figure:
     epochs = list(range(1, len(history.get("train_loss", [])) + 1))

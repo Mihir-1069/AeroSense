@@ -19,29 +19,16 @@ from src.data.cleaning import clean_measurements, normalise_units
 from src.data.storage import save_processed, load_processed, list_processed_files, export_csv
 from src.visualization.charts import time_series_chart, map_scatter
 
+from src.visualization.theme import apply_theme
+
 st.set_page_config(page_title="Data Explorer — AeroSense AI", page_icon="🌐", layout="wide")
 
-# Inject shared CSS
-st.markdown("""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-html, body, [class*="css"] { font-family:'Inter',sans-serif; }
-.stApp { background: linear-gradient(135deg,#0D1117,#111827,#0D1117); }
-[data-testid="stSidebar"] { background: linear-gradient(180deg,#0D1117,#161B22); border-right:1px solid #21262D; }
-.section-header { font-size:1.1rem; font-weight:600; color:#00D4FF; border-left:3px solid #00D4FF; padding-left:.75rem; margin:1.5rem 0 .75rem 0; }
-.badge { display:inline-block; padding:.2rem .6rem; border-radius:20px; font-size:.72rem; font-weight:600; }
-.badge-ok { background:rgba(0,228,0,.15); color:#00E400; border:1px solid #00E400; }
-.badge-warn { background:rgba(255,165,0,.15); color:#FFA500; border:1px solid #FFA500; }
-.badge-error { background:rgba(255,68,68,.15); color:#FF4444; border:1px solid #FF4444; }
-</style>
-""", unsafe_allow_html=True)
+apply_theme()
 
 st.title("🌐 Global Data Explorer")
 st.caption("Fetch real-time and historical measurements from OpenAQ API v3, or inspect stored datasets.")
 
-# ---------------------------------------------------------------------------
 # Sidebar — controls
-# ---------------------------------------------------------------------------
 with st.sidebar:
     st.markdown("### 🌍 Live API Extraction")
 
@@ -65,9 +52,7 @@ with st.sidebar:
         load_stored_btn = False
         st.caption("No locally saved Parquet datasets yet.")
 
-# ---------------------------------------------------------------------------
 # Session state
-# ---------------------------------------------------------------------------
 if "raw_df" not in st.session_state:
     st.session_state.raw_df = None
 if "clean_df" not in st.session_state:
@@ -77,9 +62,7 @@ if "locations_df" not in st.session_state:
 if "data_origin" not in st.session_state:
     st.session_state.data_origin = None
 
-# ---------------------------------------------------------------------------
 # API key notice
-# ---------------------------------------------------------------------------
 if not settings.api_key_configured():
     st.warning(
         "⚠️ OpenAQ API key is not configured. Go to **🛠️ System Diagnostics** (sidebar) to enter your key for live queries, "
@@ -87,9 +70,7 @@ if not settings.api_key_configured():
         icon="⚠️",
     )
 
-# ---------------------------------------------------------------------------
 # Load stored dataset
-# ---------------------------------------------------------------------------
 if load_stored_btn and selected_stored:
     loaded = load_processed(selected_stored)
     if loaded is not None and not loaded.empty:
@@ -105,9 +86,7 @@ if load_stored_btn and selected_stored:
     else:
         st.error(f"Could not load dataset `{selected_stored}`.")
 
-# ---------------------------------------------------------------------------
 # Fetch Live Data
-# ---------------------------------------------------------------------------
 if fetch_btn:
     if not settings.api_key_configured():
         st.error("Cannot fetch live data: OpenAQ API key not configured. Add it in System Diagnostics or `.env`.")
@@ -198,9 +177,7 @@ if st.session_state.clean_df is None and stored_files:
             loc_cols = [c for c in ["location_id", "location_name", "city", "country", "latitude", "longitude"] if c in default_df.columns]
             st.session_state.locations_df = default_df[loc_cols].drop_duplicates(subset=["location_id"])
 
-# ---------------------------------------------------------------------------
 # Display
-# ---------------------------------------------------------------------------
 clean_df = st.session_state.clean_df
 locs_df  = st.session_state.locations_df
 

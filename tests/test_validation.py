@@ -12,7 +12,6 @@ import pytest
 from src.data.validation import validate_measurements
 from src.data.cleaning import clean_dataset
 
-
 def test_validate_measurements_clean():
     df = pd.DataFrame({
         "location_id": [1, 1, 1],
@@ -25,7 +24,6 @@ def test_validate_measurements_clean():
     assert report.missing_value == 0
     assert report.invalid_range == 0
 
-
 def test_validate_measurements_out_of_range():
     df = pd.DataFrame({
         "location_id": [1, 1],
@@ -37,7 +35,6 @@ def test_validate_measurements_out_of_range():
     assert len(cleaned) == 1
     assert report.invalid_range == 1
 
-
 def test_validate_measurements_duplicates():
     df = pd.DataFrame({
         "location_id": [1, 1],
@@ -48,7 +45,6 @@ def test_validate_measurements_duplicates():
     cleaned, report = validate_measurements(df)
     assert len(cleaned) == 1
     assert report.duplicates == 1
-
 
 def test_clean_dataset_interpolation():
     # Dataset with a small gap

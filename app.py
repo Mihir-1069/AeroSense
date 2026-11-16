@@ -15,14 +15,12 @@ import streamlit as st
 from src.config import settings
 from src.utils.logging_config import setup_logging
 
-# ---------------------------------------------------------------------------
 # Logging (do before any other import that might log)
-# ---------------------------------------------------------------------------
 setup_logging(level=settings.LOG_LEVEL, log_dir=settings.LOGS_DIR)
 
-# ---------------------------------------------------------------------------
 # Page config — MUST be the first Streamlit call
-# ---------------------------------------------------------------------------
+from src.visualization.theme import apply_theme
+
 st.set_page_config(
     page_title=f"{settings.APP_NAME} — Air Quality Intelligence",
     page_icon="🌬️",
@@ -35,108 +33,9 @@ st.set_page_config(
     },
 )
 
-# ---------------------------------------------------------------------------
-# Global CSS — premium dark theme
-# ---------------------------------------------------------------------------
-st.markdown(
-    """
-<style>
-/* ---- Base ---- */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+apply_theme()
 
-html, body, [class*="css"] {
-    font-family: 'Inter', sans-serif;
-    color: #E6EDF3;
-}
-.stApp {
-    background: linear-gradient(135deg, #0D1117 0%, #111827 50%, #0D1117 100%);
-}
-
-/* ---- Sidebar ---- */
-[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #0D1117 0%, #161B22 100%);
-    border-right: 1px solid #21262D;
-}
-[data-testid="stSidebar"] .css-1d391kg { background: transparent; }
-
-/* ---- KPI Cards ---- */
-.kpi-card {
-    background: linear-gradient(135deg, #161B22, #21262D);
-    border: 1px solid #30363D;
-    border-radius: 12px;
-    padding: 1.2rem 1rem;
-    text-align: center;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-.kpi-card:hover {
-    border-color: #00D4FF;
-    box-shadow: 0 0 20px rgba(0,212,255,0.15);
-}
-.kpi-value { font-size: 2rem; font-weight: 700; color: #00D4FF; margin: 0.3rem 0; }
-.kpi-label { font-size: 0.75rem; color: #8B949E; text-transform: uppercase; letter-spacing: 0.08em; }
-.kpi-delta { font-size: 0.8rem; }
-.kpi-delta.up   { color: #FF4444; }
-.kpi-delta.down { color: #00E400; }
-
-/* ---- Section headers ---- */
-.section-header {
-    font-size: 1.1rem; font-weight: 600; color: #00D4FF;
-    border-left: 3px solid #00D4FF; padding-left: 0.75rem;
-    margin: 1.5rem 0 0.75rem 0;
-}
-
-/* ---- Status badges ---- */
-.badge { display: inline-block; padding: 0.2rem 0.6rem;
-         border-radius: 20px; font-size: 0.72rem; font-weight: 600; }
-.badge-ok     { background: rgba(0,228,0,0.15);   color: #00E400; border: 1px solid #00E400; }
-.badge-warn   { background: rgba(255,165,0,0.15); color: #FFA500; border: 1px solid #FFA500; }
-.badge-error  { background: rgba(255,68,68,0.15); color: #FF4444; border: 1px solid #FF4444; }
-.badge-info   { background: rgba(0,212,255,0.15); color: #00D4FF; border: 1px solid #00D4FF; }
-
-/* ---- AQI chips ---- */
-.aqi-chip {
-    display: inline-block; padding: 0.5rem 1.2rem;
-    border-radius: 24px; font-weight: 700; font-size: 1rem;
-}
-
-/* ---- Buttons ---- */
-.stButton > button {
-    border-radius: 8px !important;
-    font-weight: 500 !important;
-    transition: all 0.2s !important;
-}
-.stButton > button:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(0,212,255,0.3) !important; }
-
-/* ---- Tables ---- */
-.stDataFrame { border-radius: 8px; overflow: hidden; }
-
-/* ---- Tabs ---- */
-[data-testid="stTab"] { border-radius: 8px 8px 0 0 !important; }
-
-/* ---- Plotly charts dark bg ---- */
-.js-plotly-plot .plotly .bg { fill: #161B22 !important; }
-
-/* ---- Warning / Info boxes ---- */
-.info-box {
-    background: rgba(0,212,255,0.08);
-    border: 1px solid rgba(0,212,255,0.3);
-    border-radius: 8px; padding: 0.75rem 1rem; margin: 0.5rem 0;
-    font-size: 0.85rem;
-}
-.warn-box {
-    background: rgba(255,165,0,0.08);
-    border: 1px solid rgba(255,165,0,0.3);
-    border-radius: 8px; padding: 0.75rem 1rem; margin: 0.5rem 0;
-    font-size: 0.85rem;
-}
-</style>
-""",
-    unsafe_allow_html=True,
-)
-
-# ---------------------------------------------------------------------------
 # Sidebar branding
-# ---------------------------------------------------------------------------
 with st.sidebar:
     st.markdown(
         """
@@ -170,9 +69,7 @@ with st.sidebar:
         unsafe_allow_html=True,
     )
 
-# ---------------------------------------------------------------------------
 # Home content (this page = app.py = "Home")
-# ---------------------------------------------------------------------------
 st.markdown(
     f"""
 <div style="text-align:center; padding: 2rem 0 1rem 0;">

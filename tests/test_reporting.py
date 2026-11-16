@@ -17,7 +17,6 @@ from src.reporting.report_generator import (
 )
 from src.config import settings
 
-
 @pytest.fixture
 def sample_report_df():
     dts = pd.date_range("2026-01-01 00:00:00", periods=50, freq="h", tz="UTC")
@@ -29,7 +28,6 @@ def sample_report_df():
         "location_name": "Test Station",
     })
 
-
 def test_compute_dataset_summary(sample_report_df):
     stats = compute_dataset_summary(sample_report_df)
     assert stats["count"] == 50
@@ -38,20 +36,17 @@ def test_compute_dataset_summary(sample_report_df):
     assert "who_exceedance_pct" in stats
     assert "cpcb_distribution" in stats
 
-
 def test_generate_markdown_report(sample_report_df):
     md = generate_markdown_report("test_ds", sample_report_df)
     assert "# 🌬️ AeroSense AI" in md
     assert "Executive Summary" in md
     assert "Descriptive & Environmental Statistics" in md
 
-
 def test_generate_html_report(sample_report_df):
     html = generate_html_report("test_ds", sample_report_df)
     assert "<!DOCTYPE html>" in html
     assert "AeroSense AI" in html
     assert "table" in html
-
 
 def test_create_export_archive(sample_report_df, tmp_path):
     zip_out = tmp_path / "test_export.zip"

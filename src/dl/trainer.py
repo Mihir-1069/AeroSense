@@ -29,10 +29,8 @@ log = logging.getLogger(__name__)
 torch.manual_seed(settings.DL_RANDOM_SEED)
 np.random.seed(settings.DL_RANDOM_SEED)
 
-
 def get_device() -> torch.device:
     return torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
 
 def _make_loader(X: np.ndarray, y: np.ndarray, batch_size: int, shuffle: bool) -> DataLoader:
     dataset = TensorDataset(
@@ -40,7 +38,6 @@ def _make_loader(X: np.ndarray, y: np.ndarray, batch_size: int, shuffle: bool) -
         torch.tensor(y, dtype=torch.float32),
     )
     return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)
-
 
 def train_dl_model(
     series: np.ndarray,
@@ -69,14 +66,14 @@ def train_dl_model(
     device = get_device()
     log.info("Training %s on %s (lookback=%d, horizon=%d).", model_name, device, lookback, horizon)
 
-    # --- Scale on train portion only ---
+    # Scale on train portion only
     n = len(series)
     n_train = int(n * settings.TRAIN_RATIO)
     train_series = series[:n_train]
     scaled_train, scaler = fit_scaler(train_series)
     scaled_all = scaler.transform(series.reshape(-1, 1)).flatten().astype(np.float32)
 
-    # --- Build sequences ---
+    # Build sequences
     X, y = build_sequences(
         series=type("S", (), {"values": scaled_all})(),  # duck-type for reuse
         lookback=lookback, horizon=horizon,
@@ -113,7 +110,7 @@ def train_dl_model(
 
     t0 = time.time()
     for epoch in range(1, epochs + 1):
-        # --- Train ---
+        # Train
         model.train()
         train_losses = []
         for xb, yb in train_loader:
@@ -126,7 +123,7 @@ def train_dl_model(
             optimizer.step()
             train_losses.append(loss.item())
 
-        # --- Validate ---
+        # Validate
         model.eval()
         val_losses = []
         with torch.no_grad():
@@ -158,7 +155,7 @@ def train_dl_model(
     if best_state:
         model.load_state_dict(best_state)
 
-    # --- Test evaluation ---
+    # Test evaluation
     model.eval()
     with torch.no_grad():
         X_te_t = torch.tensor(X_te, dtype=torch.float32).to(device)
@@ -172,7 +169,7 @@ def train_dl_model(
     ss_tot = float(np.sum((actual_inv - np.mean(actual_inv)) ** 2))
     r2 = 1 - ss_res / ss_tot if ss_tot > 0 else float("nan")
 
-    # --- Save checkpoint ---
+    # Save checkpoint
     ckpt_path = save_dir / f"{model_name}_lookback{lookback}_h{horizon}.pt"
     torch.save({
         "model_state": best_state or model.state_dict(),
@@ -198,7 +195,6 @@ def train_dl_model(
         "device": str(device),
     }
 
-
 def load_dl_model(ckpt_path: Path, model_name: Optional[str] = None) -> Dict:
     ckpt = torch.load(ckpt_path, map_location="cpu", weights_only=False)
     name  = model_name or ckpt["model_name"]
@@ -209,7 +205,6 @@ def load_dl_model(ckpt_path: Path, model_name: Optional[str] = None) -> Dict:
     model.eval()
     return {"model": model, "scaler": ckpt["scaler"],
             "lookback": lb, "horizon": h, "metrics": ckpt.get("metrics", {})}
-
 
 def predict_dl(
     model_dict: Dict,

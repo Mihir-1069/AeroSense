@@ -15,24 +15,16 @@ from src.aqi.us_epa import calculate_epa_aqi
 from src.data.storage import load_processed, list_processed_files
 from src.visualization.charts import aqi_gauge, PLOTLY_TEMPLATE, AQI_COLORS
 
+from src.visualization.theme import apply_theme
+
 st.set_page_config(page_title="AQI Intelligence — AeroSense AI", page_icon="🎯", layout="wide")
 
-st.markdown("""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-html, body, [class*="css"] { font-family:'Inter',sans-serif; }
-.stApp { background: linear-gradient(135deg,#0D1117,#111827,#0D1117); }
-[data-testid="stSidebar"] { background: linear-gradient(180deg,#0D1117,#161B22); border-right:1px solid #21262D; }
-.section-header { font-size:1.1rem; font-weight:600; color:#00D4FF; border-left:3px solid #00D4FF; padding-left:.75rem; margin:1.5rem 0 .75rem 0; }
-.aqi-card { background:linear-gradient(135deg,#161B22,#21262D); border:1px solid #30363D; border-radius:12px; padding:1.5rem; text-align:center; }
-</style>""", unsafe_allow_html=True)
+apply_theme()
 
 st.title("🎯 AQI Intelligence")
 st.caption("Calculate CPCB (India) and US EPA Air Quality Index from measured pollutant concentrations.")
 
-# ---------------------------------------------------------------------------
 # Manual input or from loaded data
-# ---------------------------------------------------------------------------
 st.markdown('<div class="section-header">📥 Pollutant Input</div>', unsafe_allow_html=True)
 
 input_mode = st.radio("Input mode", ["Manual entry", "From loaded dataset"], horizontal=True)
@@ -78,9 +70,7 @@ else:
     else:
         st.info("No processed data found. Use **Data Explorer** first, or switch to Manual entry.")
 
-# ---------------------------------------------------------------------------
 # Calculate
-# ---------------------------------------------------------------------------
 if st.button("🔬 Calculate AQI", type="primary") or measurements:
     if not measurements:
         st.warning("Enter at least one pollutant concentration.")
@@ -88,7 +78,7 @@ if st.button("🔬 Calculate AQI", type="primary") or measurements:
 
     tab_cpcb, tab_epa, tab_method = st.tabs(["🇮🇳 CPCB (India)", "🇺🇸 US EPA", "📖 Methodology"])
 
-    # --- CPCB ---
+    # CPCB
     with tab_cpcb:
         result = calculate_cpcb_aqi(measurements)
         col1, col2 = st.columns([1, 2])
@@ -125,7 +115,7 @@ if st.button("🔬 Calculate AQI", type="primary") or measurements:
                 ])
                 st.dataframe(sub_df, use_container_width=True, hide_index=True)
 
-    # --- EPA ---
+    # EPA
     with tab_epa:
         epa_result = calculate_epa_aqi(measurements)
         col1, col2 = st.columns([1, 2])
@@ -158,7 +148,7 @@ if st.button("🔬 Calculate AQI", type="primary") or measurements:
                 ])
                 st.dataframe(sub_df_e, use_container_width=True, hide_index=True)
 
-    # --- Methodology ---
+    # Methodology
     with tab_method:
         st.markdown("""
 ### CPCB (India) AQI Methodology

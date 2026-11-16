@@ -18,23 +18,16 @@ from src.visualization.charts import (
     scatter_plot, correlation_heatmap, PLOTLY_TEMPLATE
 )
 
+from src.visualization.theme import apply_theme
+
 st.set_page_config(page_title="Analytics — AeroSense AI", page_icon="📈", layout="wide")
 
-st.markdown("""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-html, body, [class*="css"] { font-family:'Inter',sans-serif; }
-.stApp { background: linear-gradient(135deg,#0D1117,#111827,#0D1117); }
-[data-testid="stSidebar"] { background: linear-gradient(180deg,#0D1117,#161B22); border-right:1px solid #21262D; }
-.section-header { font-size:1.1rem; font-weight:600; color:#00D4FF; border-left:3px solid #00D4FF; padding-left:.75rem; margin:1.5rem 0 .75rem 0; }
-</style>""", unsafe_allow_html=True)
+apply_theme()
 
 st.title("📈 Pollution Analytics")
 st.caption("Statistical, temporal, spatial, and correlation analysis of collected data.")
 
-# ---------------------------------------------------------------------------
 # Load data
-# ---------------------------------------------------------------------------
 processed_files = list_processed_files()
 df: pd.DataFrame = pd.DataFrame()
 
@@ -59,9 +52,7 @@ with st.sidebar:
         if "location_name" in df.columns:
             st.metric("Stations", df["location_name"].nunique())
 
-# ---------------------------------------------------------------------------
 # Ensure datetime is parsed
-# ---------------------------------------------------------------------------
 if not df.empty and "datetime_utc" in df.columns:
     df["datetime_utc"] = pd.to_datetime(df["datetime_utc"], utc=True, errors="coerce")
     df = df.dropna(subset=["datetime_utc", "value"])
@@ -78,16 +69,14 @@ if df.empty:
 </div>""", unsafe_allow_html=True)
     st.stop()
 
-# ---------------------------------------------------------------------------
 # Tabs
-# ---------------------------------------------------------------------------
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
     "⏱️ Temporal", "📊 Statistical", "🏙️ Spatial", "🔗 Correlation", "📋 Summary"
 ])
 
 PARAM_LABEL = f"{df['parameter'].iloc[0].upper()} (µg/m³)" if "parameter" in df.columns else "Value (µg/m³)"
 
-# --- Temporal ---
+# Temporal
 with tab1:
     st.markdown('<div class="section-header">Temporal Patterns</div>', unsafe_allow_html=True)
     sub_t1, sub_t2, sub_t3 = st.tabs(["Daily Trend", "Hourly Pattern", "Day-of-Week"])
@@ -126,7 +115,7 @@ with tab1:
                          title="Average by Day of Week", y_label=PARAM_LABEL)
         st.plotly_chart(fig3, use_container_width=True)
 
-# --- Statistical ---
+# Statistical
 with tab2:
     st.markdown('<div class="section-header">Statistical Analysis</div>', unsafe_allow_html=True)
     col1, col2 = st.columns([1, 2])
@@ -155,7 +144,7 @@ with tab2:
                            title="Monthly Distribution", y_label=PARAM_LABEL)
         st.plotly_chart(fig_box, use_container_width=True)
 
-# --- Spatial ---
+# Spatial
 with tab3:
     st.markdown('<div class="section-header">Spatial Comparison</div>', unsafe_allow_html=True)
     if "city" in df.columns and df["city"].notna().any():
@@ -177,7 +166,7 @@ with tab3:
     else:
         st.info("No city/location data available for spatial comparison.")
 
-# --- Correlation ---
+# Correlation
 with tab4:
     st.markdown('<div class="section-header">Feature Correlation</div>', unsafe_allow_html=True)
     num_cols = ["value", "hour", "day_of_week"] if "day_of_week" in df.columns \
@@ -191,7 +180,7 @@ with tab4:
     else:
         st.info("Insufficient numeric columns for correlation analysis.")
 
-# --- Summary ---
+# Summary
 with tab5:
     st.markdown('<div class="section-header">Data Summary</div>', unsafe_allow_html=True)
     s1, s2, s3, s4 = st.columns(4)

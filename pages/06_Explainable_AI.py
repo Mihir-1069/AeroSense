@@ -20,15 +20,10 @@ from src.explainability.feature_importance import (
 )
 from src.visualization.charts import feature_importance_bar, residual_plot, PLOTLY_TEMPLATE
 
+from src.visualization.theme import apply_theme
+
 st.set_page_config(page_title="Explainable AI — AeroSense AI", page_icon="🧠", layout="wide")
-st.markdown("""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-html, body, [class*="css"] { font-family:'Inter',sans-serif; }
-.stApp { background: linear-gradient(135deg,#0D1117,#111827,#0D1117); }
-[data-testid="stSidebar"] { background: linear-gradient(180deg,#0D1117,#161B22); border-right:1px solid #21262D; }
-.section-header { font-size:1.1rem; font-weight:600; color:#00D4FF; border-left:3px solid #00D4FF; padding-left:.75rem; margin:1.5rem 0 .75rem 0; }
-</style>""", unsafe_allow_html=True)
+apply_theme()
 
 st.title("🧠 Explainable AI")
 st.caption("Feature importance, SHAP explanations, and residual analysis for trained models.")
@@ -57,11 +52,9 @@ if not ml_models or not processed_files:
 </div>""", unsafe_allow_html=True)
     st.stop()
 
-
 @st.cache_data(show_spinner=False)
 def _load_df(dataset: str):
     return load_processed(dataset)
-
 
 df = _load_df(dataset_name)
 model_dict = load_model(model_name)
@@ -90,9 +83,7 @@ X_test, y_test = X[-n_test:], y[-n_test:]
 y_pred = model_dict["model"].predict(X_test)
 model_dict_full = {"model": model_dict["model"], "features": avail_features}
 
-# ---------------------------------------------------------------------------
 # Tabs
-# ---------------------------------------------------------------------------
 tab1, tab2, tab3 = st.tabs(["📊 Feature Importance", "🔬 SHAP Analysis", "📐 Residuals"])
 
 with tab1:

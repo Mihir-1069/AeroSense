@@ -17,7 +17,6 @@ from src.config import settings
 
 log = logging.getLogger(__name__)
 
-
 def save_processed(
     df: pd.DataFrame,
     name: str,
@@ -31,7 +30,6 @@ def save_processed(
     log.info("Saved processed → %s (%d rows)", path.name, len(df))
     return path
 
-
 def load_processed(name: str, base_dir: Optional[Path] = None) -> Optional[pd.DataFrame]:
     base = base_dir or settings.PROCESSED_DIR
     path = base / f"{name}.parquet"
@@ -41,14 +39,11 @@ def load_processed(name: str, base_dir: Optional[Path] = None) -> Optional[pd.Da
     log.debug("Loaded %s (%d rows).", path.name, len(df))
     return df
 
-
 def save_features(df: pd.DataFrame, name: str) -> Path:
     return save_processed(df, name, base_dir=settings.FEATURES_DIR)
 
-
 def load_features(name: str) -> Optional[pd.DataFrame]:
     return load_processed(name, base_dir=settings.FEATURES_DIR)
-
 
 def export_csv(df: pd.DataFrame, name: str) -> Path:
     settings.EXPORTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -58,14 +53,11 @@ def export_csv(df: pd.DataFrame, name: str) -> Path:
     log.info("Exported CSV → %s", path.name)
     return path
 
-
 def list_raw_files(pattern: str = "*.parquet") -> list[Path]:
     return sorted(settings.RAW_DIR.glob(pattern))
 
-
 def list_processed_files(pattern: str = "*.parquet") -> list[Path]:
     return sorted(settings.PROCESSED_DIR.glob(pattern))
-
 
 def latest_raw(prefix: str) -> Optional[pd.DataFrame]:
     """Load the most recent raw parquet file matching a prefix."""

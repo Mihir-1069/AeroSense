@@ -12,10 +12,7 @@ import torch.nn as nn
 
 log = logging.getLogger(__name__)
 
-
-# ---------------------------------------------------------------------------
 # LSTM
-# ---------------------------------------------------------------------------
 class LSTMForecaster(nn.Module):
     """Stacked LSTM for sequence-to-sequence pollution forecasting."""
 
@@ -38,10 +35,7 @@ class LSTMForecaster(nn.Module):
         out, _ = self.lstm(x)
         return self.fc(out[:, -1, :])
 
-
-# ---------------------------------------------------------------------------
 # GRU
-# ---------------------------------------------------------------------------
 class GRUForecaster(nn.Module):
     """Stacked GRU for sequence-to-sequence pollution forecasting."""
 
@@ -64,10 +58,7 @@ class GRUForecaster(nn.Module):
         out, _ = self.gru(x)
         return self.fc(out[:, -1, :])
 
-
-# ---------------------------------------------------------------------------
 # TCN — Temporal Convolutional Network
-# ---------------------------------------------------------------------------
 class _CausalConv1d(nn.Module):
     """Causal dilated 1-D convolution with optional residual connection."""
 
@@ -82,7 +73,6 @@ class _CausalConv1d(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.bn(self.relu(self.chomp(self.conv(x))))
-
 
 class TCNForecaster(nn.Module):
     """Temporal Convolutional Network for time-series forecasting."""
@@ -112,10 +102,7 @@ class TCNForecaster(nn.Module):
         out = self.network(x)
         return self.fc(out[:, :, -1])
 
-
-# ---------------------------------------------------------------------------
 # Transformer
-# ---------------------------------------------------------------------------
 class TransformerForecaster(nn.Module):
     """Encoder-only Transformer for time-series forecasting."""
 
@@ -147,17 +134,13 @@ class TransformerForecaster(nn.Module):
         enc = self.encoder(x)
         return self.fc(enc[:, -1, :])
 
-
-# ---------------------------------------------------------------------------
 # Factory
-# ---------------------------------------------------------------------------
 MODEL_REGISTRY = {
     "LSTM": LSTMForecaster,
     "GRU":  GRUForecaster,
     "TCN":  TCNForecaster,
     "Transformer": TransformerForecaster,
 }
-
 
 def build_model(
     name: str,

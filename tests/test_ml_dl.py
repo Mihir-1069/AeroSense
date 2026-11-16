@@ -14,7 +14,6 @@ from src.ml.train import train_models
 from src.ml.baselines import evaluate_baselines
 from src.dl.models import LSTMForecaster, GRUForecaster, TCNForecaster, TransformerForecaster
 
-
 @pytest.fixture
 def dummy_train_df():
     """Create a 120-hour dataset suitable for quick ML model training."""
@@ -27,7 +26,6 @@ def dummy_train_df():
         "parameter": "pm25",
     })
 
-
 def test_ml_train_fast(dummy_train_df, tmp_path):
     """Test fast ML training with LinearRegression and Ridge."""
     results_df = train_models(dummy_train_df, model_names=["LinearRegression", "Ridge"], save_dir=tmp_path)
@@ -39,7 +37,6 @@ def test_ml_train_fast(dummy_train_df, tmp_path):
     for mae in results_df["test_MAE"]:
         assert mae >= 0.0
 
-
 def test_baselines():
     """Test naive baseline forecasts."""
     train = np.array([10.0, 20.0, 30.0, 40.0, 50.0])
@@ -48,7 +45,6 @@ def test_baselines():
     assert not df.empty
     assert "MAE" in df.columns
     assert "model" in df.columns
-
 
 def test_dl_model_shapes():
     """Test that all DL PyTorch models forward pass correctly."""
