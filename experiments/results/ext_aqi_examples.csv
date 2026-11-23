@@ -1,0 +1,8 @@
+case,cpcb_aqi,cpcb_category,cpcb_dominant,cpcb_is_complete,epa_aqi,epa_category
+"PM2.5 only, 25 ug/m3",42,Good,pm25,True,78.0,Moderate
+"PM2.5 only, 75 ug/m3",149,Moderate,pm25,True,161.0,Unhealthy
+"PM2.5 only, 177.8 ug/m3 (R K Puram mean)",345,Very Poor,pm25,True,228.0,Very Unhealthy
+"PM2.5 only, 345 ug/m3",438,Severe,pm25,True,395.0,Hazardous
+"PM2.5 only, 501 ug/m3 (observed max)",500,Severe,pm25,True,500.0,Hazardous
+PM2.5 130 + PM10 210 + NO2 90 + SO2 25,308,Very Poor,pm25,True,,
+"Full panel PM2.5 65, PM10 110, NO2 42, SO2 18, CO 1.1, O3 48",115,Moderate,pm25,True,,

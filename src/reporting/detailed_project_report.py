@@ -162,11 +162,23 @@ def _qu_styles() -> dict[str, ParagraphStyle]:
 def _qu_table(data: List[List[str]], col_widths: List[float], font_pt: float = 9.0) -> Table:
     """Create a bordered formal academic table safely constrained within 14.9 cm width."""
     h_st = ParagraphStyle("QUTH", fontName="Times-Bold", fontSize=font_pt, leading=font_pt + 2.8, alignment=TA_CENTER)
-    c_st = ParagraphStyle("QUTC", fontName="Times-Roman", fontSize=font_pt, leading=font_pt + 2.8, alignment=TA_LEFT)
+    c_st_l = ParagraphStyle("QUTCL", fontName="Times-Roman", fontSize=font_pt, leading=font_pt + 2.8, alignment=TA_LEFT)
+    c_st_c = ParagraphStyle("QUTCC", fontName="Times-Roman", fontSize=font_pt, leading=font_pt + 2.8, alignment=TA_CENTER)
+    headers = [str(h).strip().lower() for h in data[0]] if data else []
+    center_cols = {
+        idx for idx, h in enumerate(headers)
+        if h in {"#", "rank", "page", "page no.", "table no.", "figure no.", "cases", "count", "active cols", "horizon", "valid hrs", "openaq id"}
+        or col_widths[idx] <= 1.6 * cm
+    }
     rows = []
     for r_i, row in enumerate(data):
-        st = h_st if r_i == 0 else c_st
-        rows.append([Paragraph(html.escape(str(c)), st) for c in row])
+        if r_i == 0:
+            rows.append([Paragraph(html.escape(str(c)), h_st) for c in row])
+        else:
+            rows.append([
+                Paragraph(html.escape(str(c)), c_st_c if c_i in center_cols else c_st_l)
+                for c_i, c in enumerate(row)
+            ])
     t = Table(rows, colWidths=col_widths, repeatRows=1)
     t.setStyle(TableStyle([
         ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#E2E8F0")),
@@ -193,7 +205,11 @@ def _add_qu_figure(el: list, fig_dir: Path, fig_name: str, fig_no: str, title: s
         w_pts = h_pts / aspect
     img = Image(str(p), width=w_pts, height=h_pts)
     img.hAlign = "CENTER"
-    img._qu_md_fig = (fig_name, fig_no, title)
+    try:
+        rel_fig = p.relative_to(settings.REPORTS_DIR).as_posix()
+    except ValueError:
+        rel_fig = f"figures/{fig_name}"
+    img._qu_md_fig = (rel_fig, fig_no, title)
     el.append(Spacer(1, 6))
     el.append(img)
     cap = Paragraph(f"<b>{html.escape(fig_no)}</b>  {html.escape(title)}", styles["Caption"])
@@ -325,8 +341,8 @@ def _story_to_markdown(el: list, team_members: list, meta: dict) -> str:
         elif isinstance(item, Image):
             fig_info = getattr(item, "_qu_md_fig", None)
             if fig_info is not None:
-                f_name, f_no, f_title = fig_info
-                md_lines.extend([f"![{f_no}: {f_title}](figures/{f_name})", f"*{f_no}: {f_title}*", ""])
+                f_rel, f_no, f_title = fig_info
+                md_lines.extend([f"![{f_no}: {f_title}]({f_rel})", f"*{f_no}: {f_title}*", ""])
 
     return "\n".join(md_lines)
 

@@ -64,9 +64,9 @@ df = df.dropna(subset=["datetime_utc", "value"]).sort_values("datetime_utc")
 
 st.markdown('<div class="section-header">📊 Dataset Overview</div>', unsafe_allow_html=True)
 c1, c2, c3, c4 = st.columns(4)
-c1.metric("Records", f"{len(df):,}")
-c2.metric("Date Range",
-          f"{df['datetime_utc'].min().date()} → {df['datetime_utc'].max().date()}")
+d_min, d_max = df["datetime_utc"].min(), df["datetime_utc"].max()
+c1.metric("Records", f"{len(df):,}", f"{max(1, (d_max - d_min).days)} days span")
+c2.metric("Date Span", f"{d_min.strftime('%d %b')} → {d_max.strftime('%d %b %Y')}", "Hourly UTC")
 c3.metric("Mean Value", f"{df['value'].mean():.2f} µg/m³")
 c4.metric("Stations", df["location_id"].nunique() if "location_id" in df.columns else 1)
 

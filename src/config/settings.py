@@ -90,4 +90,4 @@ def masked_api_key() -> str:
     key = OPENAQ_API_KEY or ""
     if not key or key == "your_openaq_api_key_here":
         return "NOT CONFIGURED"
-    return f"{key[:4]}{'*' * (len(key) - 8)}{key[-4:]}" if len(key) > 8 else "***"
+    return f"{key[:4]}{'*' * 8}{key[-4:]}" if len(key) > 8 else "***"

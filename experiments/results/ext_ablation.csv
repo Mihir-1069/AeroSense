@@ -1,0 +1,25 @@
+dataset,feature_group,n_features,model,test_MAE,test_RMSE,test_R2,test_MAPE
+"Live R K Puram, Delhi",Temporal calendar only,13,LinearRegression,93.429,107.009,-0.791,181.07
+"Live R K Puram, Delhi",Temporal calendar only,13,RandomForest,110.7,126.476,-1.502,175.89
+"Live R K Puram, Delhi",Lags only,5,LinearRegression,21.742,30.597,0.854,29.23
+"Live R K Puram, Delhi",Lags only,5,RandomForest,28.431,36.718,0.789,35.67
+"Live R K Puram, Delhi",Rolling statistics only,16,LinearRegression,34.275,44.822,0.686,38.16
+"Live R K Puram, Delhi",Rolling statistics only,16,RandomForest,42.979,54.002,0.544,54.22
+"Live R K Puram, Delhi",Lags + trend,6,LinearRegression,22.358,30.616,0.853,31.16
+"Live R K Puram, Delhi",Lags + trend,6,RandomForest,29.073,37.141,0.784,41.48
+"Live R K Puram, Delhi",Lags + rolling + trend,22,LinearRegression,23.755,30.874,0.851,23.35
+"Live R K Puram, Delhi",Lags + rolling + trend,22,RandomForest,28.672,37.637,0.778,37.31
+"Live R K Puram, Delhi",All 35 features,35,LinearRegression,23.803,30.54,0.854,25.32
+"Live R K Puram, Delhi",All 35 features,35,RandomForest,26.534,35.573,0.802,40.28
+Benchmark Delhi Anand Vihar,Temporal calendar only,13,LinearRegression,30.281,36.743,0.109,50.31
+Benchmark Delhi Anand Vihar,Temporal calendar only,13,RandomForest,32.37,38.932,-0.001,49.25
+Benchmark Delhi Anand Vihar,Lags only,5,LinearRegression,9.82,12.48,0.897,14.09
+Benchmark Delhi Anand Vihar,Lags only,5,RandomForest,10.388,13.106,0.887,14.38
+Benchmark Delhi Anand Vihar,Rolling statistics only,16,LinearRegression,11.038,14.045,0.87,15.64
+Benchmark Delhi Anand Vihar,Rolling statistics only,16,RandomForest,11.816,15.232,0.847,16.75
+Benchmark Delhi Anand Vihar,Lags + trend,6,LinearRegression,9.674,12.127,0.903,13.63
+Benchmark Delhi Anand Vihar,Lags + trend,6,RandomForest,10.271,12.906,0.89,14.01
+Benchmark Delhi Anand Vihar,Lags + rolling + trend,22,LinearRegression,9.737,12.192,0.902,13.79
+Benchmark Delhi Anand Vihar,Lags + rolling + trend,22,RandomForest,10.366,12.859,0.891,14.43
+Benchmark Delhi Anand Vihar,All 35 features,35,LinearRegression,9.449,11.947,0.906,13.29
+Benchmark Delhi Anand Vihar,All 35 features,35,RandomForest,9.93,12.402,0.898,14.08

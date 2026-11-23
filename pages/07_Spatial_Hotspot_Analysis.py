@@ -145,31 +145,38 @@ else:
     st.info("Displaying Indian National Monitoring Grid benchmark stations. Ingest geo-tagged data via Data Explorer to map custom stations.", icon="📍")
 
 comparison_df, used_grid_supplement = _build_comparison_grid(spatial_df, dataset_name)
+active_spatial_df = comparison_df if used_grid_supplement else spatial_df
 
 # KPI Summary
 st.markdown('<div class="section-header">📍 Spatial Distribution Overview</div>', unsafe_allow_html=True)
+if used_grid_supplement:
+    st.caption(
+        f"Active dataset `{dataset_name}` contains 1 station; displaying combined multi-station view "
+        "with stored datasets and the 8-node Indian National Reference Grid."
+    )
 col1, col2, col3, col4 = st.columns(4)
 
-total_stations = spatial_df["location_name"].nunique() if "location_name" in spatial_df.columns else len(spatial_df)
-mean_pm = spatial_df["value"].mean()
-max_station_row = spatial_df.loc[spatial_df["value"].idxmax()]
-p_threshold_val = np.percentile(spatial_df["value"], hotspot_threshold)
-hotspots_count = int((spatial_df["value"] >= p_threshold_val).sum())
+total_stations = active_spatial_df["location_name"].nunique() if "location_name" in active_spatial_df.columns else len(active_spatial_df)
+mean_pm = active_spatial_df["value"].mean()
+max_station_row = active_spatial_df.loc[active_spatial_df["value"].idxmax()]
+p_threshold_val = np.percentile(active_spatial_df["value"], hotspot_threshold)
+hotspots_count = int((active_spatial_df["value"] >= p_threshold_val).sum())
+peak_label = str(max_station_row.get("location_name", "Unknown")).split("-")[0].split("(")[0].strip()[:16]
 
-col1.metric("Monitoring Stations", f"{total_stations}")
+col1.metric("Monitoring Stations", f"{total_stations}", "Geo-tagged nodes")
 col2.metric("Spatial Mean PM2.5", f"{mean_pm:.1f} µg/m³")
-col3.metric("Peak Hotspot", f"{max_station_row.get('location_name', 'Unknown')[:18]}", f"{max_station_row['value']:.1f} µg/m³")
+col3.metric("Peak Hotspot", peak_label, f"{max_station_row['value']:.1f} µg/m³")
 col4.metric(f"Hotspots (≥{hotspot_threshold}th %ile)", f"{hotspots_count}", f"Threshold: {p_threshold_val:.1f}")
 
 # Main Interactive Map
 st.markdown('<div class="section-header">🗺️ Interactive Geographic Station Map</div>', unsafe_allow_html=True)
 
 fig_map = map_scatter(
-    spatial_df,
+    active_spatial_df,
     lat_col="latitude",
     lon_col="longitude",
     color_col="value",
-    hover_col="location_name" if "location_name" in spatial_df.columns else "city",
+    hover_col="location_name" if "location_name" in active_spatial_df.columns else "city",
     title="Continuous Ambient Monitoring Stations — PM2.5 Concentrations",
     height=550,
 )
@@ -180,16 +187,17 @@ tab1, tab2, tab3 = st.tabs(["🔥 Hotspot Identification", "🌐 Regional Contra
 
 with tab1:
     st.markdown('<div class="section-header">Ranked Pollution Hotspots</div>', unsafe_allow_html=True)
-    if "location_name" in spatial_df.columns:
-        station_summary = spatial_df.groupby("location_name").agg(
+    if "location_name" in active_spatial_df.columns:
+        station_summary = active_spatial_df.groupby("location_name").agg(
             mean_pm25=("value", "mean"),
             max_pm25=("value", "max"),
             min_pm25=("value", "min"),
             std_pm25=("value", "std"),
             records=("value", "count")
         ).reset_index().sort_values("mean_pm25", ascending=False)
+        station_summary["std_pm25"] = station_summary["std_pm25"].fillna(0.0)
     else:
-        station_summary = spatial_df[["city", "value"]].copy()
+        station_summary = active_spatial_df[["city", "value"]].copy()
 
     # Colorize by severity
     st.dataframe(

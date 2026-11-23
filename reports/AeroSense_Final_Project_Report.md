@@ -387,6 +387,9 @@ Crucially, official CPCB rules require a minimum of three monitored pollutants (
 | Very Unhealthy (201 – 300) | 150.5 – 250.4 | 355 – 424 | 0.106 – 0.200 | 15.5 – 30.4 | Converges with CPCB Very Poor upper bound (250 ug/m3) |
 | Hazardous (301 – 500) | 250.5 – 500.4 | 425 – 604 | 0.201 – 0.604 | 30.5 – 50.4 | Matches CPCB Severe threshold above 250.5 ug/m3 |
 
+![Fig. 3.1: Piecewise-Linear Sub-Index Transfer Curves Comparing Indian CPCB (2014) and US EPA (2018) PM2.5 Breakpoint Schedules](figures/fig13_aqi_breakpoint_curves.png)
+*Fig. 3.1: Piecewise-Linear Sub-Index Transfer Curves Comparing Indian CPCB (2014) and US EPA (2018) PM2.5 Breakpoint Schedules*
+
 
 ### 3.4 Leakage-Free 34-Feature Engineering Mathematical Specification
 
@@ -559,6 +562,12 @@ Figure 4.1 illustrates the four formal software design views of AeroSense AI: (A
 
 ![Fig. 4.1: AeroSense AI Level-1 DFD (A), UML Class Architecture (B), Execution Sequence Diagram (C) and Control Flow / Use-Case Design (D)](figures/fig6_uml_system_design.png)
 *Fig. 4.1: AeroSense AI Level-1 DFD (A), UML Class Architecture (B), Execution Sequence Diagram (C) and Control Flow / Use-Case Design (D)*
+
+![Fig. 4.2: End-to-End Seven-Stage AeroSense AI Data Engineering, Feature Synthesis, Chronological Split, and Model Deployment Pipeline](figures/fig07_pipeline_flow.png)
+*Fig. 4.2: End-to-End Seven-Stage AeroSense AI Data Engineering, Feature Synthesis, Chronological Split, and Model Deployment Pipeline*
+
+![Fig. 4.3: Six-Layer Modular Software Architecture Depicting Package Boundaries Across Config, Data, Domain, ML/DL, XAI, and Streamlit UI](figures/fig08_layer_architecture.png)
+*Fig. 4.3: Six-Layer Modular Software Architecture Depicting Package Boundaries Across Config, Data, Domain, ML/DL, XAI, and Streamlit UI*
 
 
 ### 4.4 Persistent Storage Architecture and Apache Parquet Schemas
@@ -852,6 +861,44 @@ Each Streamlit page in pages/01..10 is implemented as an independent, self-boots
 • **Page 08 (08_Health_Risk_and_Advisory.py), Page 09 (09_Research_Reports.py) & Page 10 (10_System_Diagnostics.py):** Page 08 audits live or simulated PM2.5 concentrations against WHO 2021 (15 ug/m3 24h, 5 ug/m3 annual), Indian NAAQS (60/40 ug/m3), and US EPA (35/9 ug/m3) thresholds and provides clinical guidance for four vulnerable cohorts. Page 09 compiles on-demand Markdown, HTML, ReportLab PDF, and ZIP reproducibility bundles alongside direct download cards for our pre-built Synopsis, Research Paper, Final Project Report, and 16-slide PPTX deck. Page 10 provides secure API key persistence to .env, live api.openaq.org/v3 ping audits, CPU/CUDA hardware profiling, 7-directory disk footprint tables, cache purging, and live log streaming.
 
 
+### 5.5 Deployed Interactive Application Screenshots (All 11 Entrypoints)
+
+Figures 5.1 through 5.11 capture the live rendered interfaces of app.py and all ten analytical pages (pages/01..10) running on populated Indian OpenAQ v3 and reference benchmark telemetry.
+
+![Fig. 5.1: AeroSense AI Home Overview (app.py) with API Connection Status, Architecture Cards, and Team Roster](screens/cropped/scr01_home.png)
+*Fig. 5.1: AeroSense AI Home Overview (app.py) with API Connection Status, Architecture Cards, and Team Roster*
+
+![Fig. 5.2: Page 01 — Global Data Explorer Displaying Validated OpenAQ v3 / Benchmark Telemetry and Quality Report](screens/cropped/scr02_data_explorer.png)
+*Fig. 5.2: Page 01 — Global Data Explorer Displaying Validated OpenAQ v3 / Benchmark Telemetry and Quality Report*
+
+![Fig. 5.3: Page 02 — Pollution Analytics Showing Temporal Trends, Diurnal Cycles, and Multi-Station Comparisons](screens/cropped/scr03_analytics.png)
+*Fig. 5.3: Page 02 — Pollution Analytics Showing Temporal Trends, Diurnal Cycles, and Multi-Station Comparisons*
+
+![Fig. 5.4: Page 03 — AQI Intelligence Displaying Dual CPCB (India) and US EPA Gauges and Sub-Index Breakdowns](screens/cropped/scr04_aqi_intelligence.png)
+*Fig. 5.4: Page 03 — AQI Intelligence Displaying Dual CPCB (India) and US EPA Gauges and Sub-Index Breakdowns*
+
+![Fig. 5.5: Page 04 — Forecasting Studio Displaying Persisted ML Leaderboard, Test Forecast Overlay, and Baselines](screens/cropped/scr05_forecasting_studio.png)
+*Fig. 5.5: Page 04 — Forecasting Studio Displaying Persisted ML Leaderboard, Test Forecast Overlay, and Baselines*
+
+![Fig. 5.6: Page 05 — Model Benchmarking Showing Unified 10-Model ML + PyTorch DL Ranked Test Leaderboard](screens/cropped/scr06_model_benchmarking.png)
+*Fig. 5.6: Page 05 — Model Benchmarking Showing Unified 10-Model ML + PyTorch DL Ranked Test Leaderboard*
+
+![Fig. 5.7: Page 06 — Explainable AI Showing Feature Importance, SHAP Attributions, and Residual Error Diagnostics](screens/cropped/scr07_explainable_ai.png)
+*Fig. 5.7: Page 06 — Explainable AI Showing Feature Importance, SHAP Attributions, and Residual Error Diagnostics*
+
+![Fig. 5.8: Page 07 — Spatial & Hotspot Analysis Displaying MapLibre Dark-Matter Station Map and Regional Contrasts](screens/cropped/scr08_spatial_hotspots.png)
+*Fig. 5.8: Page 07 — Spatial & Hotspot Analysis Displaying MapLibre Dark-Matter Station Map and Regional Contrasts*
+
+![Fig. 5.9: Page 08 — Public Health Risk & Advisory Engine Showing WHO/NAAQS Compliance and Cohort Directives](screens/cropped/scr09_health_advisory.png)
+*Fig. 5.9: Page 08 — Public Health Risk & Advisory Engine Showing WHO/NAAQS Compliance and Cohort Directives*
+
+![Fig. 5.10: Page 09 — Academic Research & Technical Reports Export Studio with 1-Click PDF/HTML/ZIP Downloads](screens/cropped/scr10_research_reports.png)
+*Fig. 5.10: Page 09 — Academic Research & Technical Reports Export Studio with 1-Click PDF/HTML/ZIP Downloads*
+
+![Fig. 5.11: Page 10 — System Diagnostics & Settings Showing OpenAQ v3 Connectivity Audit and Storage Footprint](screens/cropped/scr11_system_diagnostics.png)
+*Fig. 5.11: Page 10 — System Diagnostics & Settings Showing OpenAQ v3 Connectivity Audit and Storage Footprint*
+
+
 ---
 
 ## CHAPTER 6: RESULTS AND DISCUSSION
@@ -916,6 +963,15 @@ Live extraction from OpenAQ API v3 yielded 2,157 raw hourly measurements (1,907 
 ![Fig. 6.2: Live CPCB AQI Category Distribution Share (A) and Percentage of Monitored Hours Breaching WHO (15 ug/m3) vs Indian NAAQS (60 ug/m3) (B)](figures/fig5_aqi_exceedance.png)
 *Fig. 6.2: Live CPCB AQI Category Distribution Share (A) and Percentage of Monitored Hours Breaching WHO (15 ug/m3) vs Indian NAAQS (60 ug/m3) (B)*
 
+![Fig. 6.3: Empirical PM2.5 Concentration Distributions, Kernel Density Profiles, and Interquartile Box Plots Across Monitored Indian Stations](figures/fig09_distribution_boxplot.png)
+*Fig. 6.3: Empirical PM2.5 Concentration Distributions, Kernel Density Profiles, and Interquartile Box Plots Across Monitored Indian Stations*
+
+![Fig. 6.4: Autocorrelation Function (ACF) Profile Across Lags 1 to 72 Hours Demonstrating Strong 1-Hour Inertia and 24/48/72-Hour Diurnal Echoes](figures/fig10_acf.png)
+*Fig. 6.4: Autocorrelation Function (ACF) Profile Across Lags 1 to 72 Hours Demonstrating Strong 1-Hour Inertia and 24/48/72-Hour Diurnal Echoes*
+
+![Fig. 6.5: Joint Diurnal Hour-of-Day and Day-of-Week PM2.5 Concentration Profiles Highlighting Morning Inversion and Nocturnal Accumulation Peaks](figures/fig11_diurnal_weekly.png)
+*Fig. 6.5: Joint Diurnal Hour-of-Day and Day-of-Week PM2.5 Concentration Profiles Highlighting Morning Inversion and Nocturnal Accumulation Peaks*
+
 As shown in Figure 6.1 (Panel B), all three Indian cities exhibit a pronounced bimodal diurnal waveform in Indian Standard Time (IST = UTC + 05:30). Concentrations peak between 07:00 and 10:00 IST (coinciding with morning rush-hour emissions injected into a shallow nocturnal surface inversion before solar heating erodes the stable layer), drop to a diurnal minimum between 14:00 and 17:00 IST (when peak surface heating expands the convective planetary boundary layer and accelerates vertical dilution), and surge again after 19:00 IST as radiative cooling re-establishes the nocturnal inversion trap.
 
 
@@ -942,8 +998,17 @@ To evaluate all 14 architectures under controlled multi-month periodicity, model
 | 13 | Rolling Mean (24h) | Reference Baseline | h = 1 | — | — | — | 32.164 | 39.170 | -0.015 | <0.01 s |
 | 14 | Persistence (Lag-1) | Reference Baseline | h = 24 | — | — | — | 46.077 | 55.908 | -1.067 | <0.01 s |
 
-![Fig. 6.3: Held-Out Test Set MAE (A) and R2 Score (B) Across Traditional Machine Learning and PyTorch Deep Sequence Models](figures/fig2_model_benchmark.png)
-*Fig. 6.3: Held-Out Test Set MAE (A) and R2 Score (B) Across Traditional Machine Learning and PyTorch Deep Sequence Models*
+![Fig. 6.6: Held-Out Test Set MAE (A) and R2 Score (B) Across Traditional Machine Learning and PyTorch Deep Sequence Models](figures/fig2_model_benchmark.png)
+*Fig. 6.6: Held-Out Test Set MAE (A) and R2 Score (B) Across Traditional Machine Learning and PyTorch Deep Sequence Models*
+
+![Fig. 6.7: PyTorch Deep Sequence Architecture Training and Validation MSE Loss Convergence Curves Across Epochs (LSTM, GRU, TCN, Transformer)](figures/fig20_dl_learning_curves.png)
+*Fig. 6.7: PyTorch Deep Sequence Architecture Training and Validation MSE Loss Convergence Curves Across Epochs (LSTM, GRU, TCN, Transformer)*
+
+![Fig. 6.8: Non-Parametric Bootstrap 95% Confidence Intervals on Held-Out Test MAE Across All Evaluated Forecasting Models](figures/fig21_bootstrap_ci.png)
+*Fig. 6.8: Non-Parametric Bootstrap 95% Confidence Intervals on Held-Out Test MAE Across All Evaluated Forecasting Models*
+
+![Fig. 6.9: Pareto Frontier of Held-Out Test Forecasting Accuracy (MAE) Versus Computational Training Latency Across ML and PyTorch DL Families](figures/fig25_accuracy_vs_cost.png)
+*Fig. 6.9: Pareto Frontier of Held-Out Test Forecasting Accuracy (MAE) Versus Computational Training Latency Across ML and PyTorch DL Families*
 
 Three scientific conclusions emerge from Table 6.4: (1) Every engineered ML and 1-step DL architecture reduces test MAE by 61.7% to 69.5% relative to the 24-hour Seasonal Naive baseline (30.966 ug/m3), answering RQ2 affirmatively; (2) when tabular models are supplied with our 34 domain-engineered cyclical, lag, and shifted rolling features, regularized linear models (9.449 ug/m3 MAE, R2 = 0.906) and Random Forest (9.930 ug/m3 MAE, R2 = 0.898) match or slightly outperform raw-sequence deep networks while training 100x–400x faster on CPU; and (3) among PyTorch architectures operating directly on raw 24-hour sliding windows without pre-engineered rolling statistics, TransformerForecaster achieves the strongest generalization (9.580 ug/m3 MAE, R2 = 0.903), outperforming GRU (10.161), LSTM (10.838), and Causal TCN (11.851), answering RQ3.
 
@@ -966,8 +1031,14 @@ A central scientific finding of this project (resolving RQ4) arises when evaluat
 | 8 | Rolling Mean (24h) | 58.299 | 70.728 | 0.189 | -5.0% worse than Seasonal | 24h smoothing severely lags sharp smog onset |
 | 9 | Persistence (24h step) | 61.876 | 85.158 | -0.176 | -11.5% worse than Seasonal | Phase-misaligned across multi-hour horizons |
 
-![Fig. 6.4: Held-Out Test Split Forecast vs. Actual Trajectory (A) and Residual Error Distribution Histogram with Bias Diagnostics (B)](figures/fig3_forecast_residuals.png)
-*Fig. 6.4: Held-Out Test Split Forecast vs. Actual Trajectory (A) and Residual Error Distribution Histogram with Bias Diagnostics (B)*
+![Fig. 6.10: Held-Out Test Split Forecast vs. Actual Trajectory (A) and Residual Error Distribution Histogram with Bias Diagnostics (B)](figures/fig3_forecast_residuals.png)
+*Fig. 6.10: Held-Out Test Split Forecast vs. Actual Trajectory (A) and Residual Error Distribution Histogram with Bias Diagnostics (B)*
+
+![Fig. 6.11: Predicted vs. Observed Parity Scatter Plot (A) and Normal Quantile-Quantile (Q-Q) Residual Tail Audit (B) on Held-Out Test Data](figures/fig22_scatter_qq.png)
+*Fig. 6.11: Predicted vs. Observed Parity Scatter Plot (A) and Normal Quantile-Quantile (Q-Q) Residual Tail Audit (B) on Held-Out Test Data*
+
+![Fig. 6.12: Multi-Horizon Forecasting Skill Decay From h = 1 to h = 24 Hours Comparing Direct ML/DL Models Against Seasonal Naive Baselines](figures/fig18_horizon_degradation.png)
+*Fig. 6.12: Multi-Horizon Forecasting Skill Decay From h = 1 to h = 24 Hours Comparing Direct ML/DL Models Against Seasonal Naive Baselines*
 
 Why does OLS Linear Regression (23.803 ug/m3 MAE, R2 = 0.854) outperform XGBoost (33.479 ug/m3 MAE, R2 = 0.714) by nearly 10 ug/m3 on live Delhi R K Puram data? As proved mathematically in Section 3.5.2, decision tree ensembles partition the feature space into hyper-rectangles and predict constant leaf averages bounded strictly by [min(y_train), max(y_train)]. When a November temperature inversion drives y_{t-1} above any October training observation, every tree leaf saturates at its highest historical training bucket, causing systematic negative bias (under-prediction). Conversely, Linear Regression and Ridge apply a continuous autoregressive multiplier w_{lag_1} * y_{t-1} + w_{diff_1} * (y_{t-1} - y_{t-2}), tracking unseen concentration regimes accurately.
 
@@ -976,8 +1047,20 @@ Why does OLS Linear Regression (23.803 ug/m3 MAE, R2 = 0.854) outperform XGBoost
 
 To resolve RQ5 and verify that trained models learn physically meaningful atmospheric relationships rather than spurious correlations, TreeSHAP (on Random Forest / HistGradientBoosting), Linear coefficient magnitudes (on standardized Ridge), and 5-repeat Permutation Importance were computed on the held-out test split (Figure 6.5 and Table 6.6).
 
-![Fig. 6.5: Top-10 Mean Absolute TreeSHAP Feature Attributions (ug/m3 Impact on Model Output) Across Held-Out Test Instances](figures/fig4_shap_importance.png)
-*Fig. 6.5: Top-10 Mean Absolute TreeSHAP Feature Attributions (ug/m3 Impact on Model Output) Across Held-Out Test Instances*
+![Fig. 6.13: Top-10 Mean Absolute TreeSHAP Feature Attributions (ug/m3 Impact on Model Output) Across Held-Out Test Instances](figures/fig4_shap_importance.png)
+*Fig. 6.13: Top-10 Mean Absolute TreeSHAP Feature Attributions (ug/m3 Impact on Model Output) Across Held-Out Test Instances*
+
+![Fig. 6.14: Pairwise Pearson Correlation Matrix Across Engineered Autoregressive Lags, Shifted Rolling Moments, and Cyclical Diurnal Harmonics](figures/fig15_feature_correlation.png)
+*Fig. 6.14: Pairwise Pearson Correlation Matrix Across Engineered Autoregressive Lags, Shifted Rolling Moments, and Cyclical Diurnal Harmonics*
+
+![Fig. 6.15: Cross-Method Feature Attribution Concordance Comparing TreeSHAP, Standardized Ridge Coefficients, and Permutation Importance](figures/fig16_feature_importance_compare.png)
+*Fig. 6.15: Cross-Method Feature Attribution Concordance Comparing TreeSHAP, Standardized Ridge Coefficients, and Permutation Importance*
+
+![Fig. 6.16: Incremental Feature-Group Ablation Curve Showing Stepwise Test MAE Reduction From Calendar Only to the Full 34-Feature Matrix](figures/fig17_feature_ablation.png)
+*Fig. 6.16: Incremental Feature-Group Ablation Curve Showing Stepwise Test MAE Reduction From Calendar Only to the Full 34-Feature Matrix*
+
+![Fig. 6.17: Geographic Distribution and Regional Severity Classification Across Monitored Indian Air Quality Reference Nodes](figures/fig24_station_geography.png)
+*Fig. 6.17: Geographic Distribution and Regional Severity Classification Across Monitored Indian Air Quality Reference Nodes*
 
 **Table 6.6: Quantitative Top-10 Feature Attribution Comparison Across TreeSHAP, Standardized Ridge, and Permutation Importance**
 

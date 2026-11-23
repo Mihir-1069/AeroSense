@@ -1,0 +1,2 @@
+dataset,model,n_test,mean_residual,std_residual,skew,kurtosis,residual_acf_lag1,max_abs_error,p50_abs_error,p90_abs_error,p95_abs_error
+"Live R K Puram, Delhi",LinearRegression,93,8.754961652940063,29.41671194359518,0.05691962336254786,0.8963045411780728,0.2046251037110559,94.75177379244312,20.10641352749228,49.44004792424024,59.002486032560896

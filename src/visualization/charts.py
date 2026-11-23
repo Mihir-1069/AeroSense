@@ -101,12 +101,13 @@ def forecast_chart(
             mode="lines",
         ))
     fig.update_layout(
-        title=title,
+        title=dict(text=title, x=0.0, xanchor="left"),
         yaxis_title=y_label,
         xaxis_title="Date/Time",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1.0),
         **_base_layout(height=height),
     )
+    fig.update_layout(margin=dict(l=50, r=30, t=68, b=50))
     return fig
 
 def aqi_gauge(aqi: int, standard: str = "CPCB") -> go.Figure:

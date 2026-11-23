@@ -31,6 +31,7 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; color: #E6EDF3; }
 .alert-good { background: rgba(0,228,0,0.12); border: 1px solid #00E400; color: #85FF85; }
 .stButton > button { border-radius: 8px !important; font-weight: 500 !important; transition: all 0.2s !important; }
 .stButton > button:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(0,212,255,0.3) !important; }
+[data-testid="stMetricValue"] { font-size: 1.55rem !important; line-height: 1.25 !important; }
 .js-plotly-plot .plotly .bg { fill: #161B22 !important; }
 </style>
 """

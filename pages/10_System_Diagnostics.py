@@ -69,9 +69,9 @@ with col_key1:
 
 with col_key2:
     st.markdown(f"""
-<div class="kpi-card">
-  <div style="font-size:0.75rem; color:#8B949E; text-transform:uppercase;">Active Configuration</div>
-  <div style="margin-top:0.5rem; font-size:0.9rem;">
+<div class="kpi-card" style="text-align:left; padding:1rem 1.2rem;">
+  <div style="font-size:0.75rem; color:#8B949E; text-transform:uppercase; letter-spacing:0.06em;">Active Configuration</div>
+  <div style="margin-top:0.55rem; font-size:0.88rem; line-height:1.65;">
     <strong>API Key:</strong> <code>{settings.masked_api_key()}</code><br>
     <strong>Default Country:</strong> <code>{settings.DEFAULT_COUNTRY}</code><br>
     <strong>Default Pollutant:</strong> <code>{settings.DEFAULT_POLLUTANT.upper()}</code><br>
@@ -87,7 +87,7 @@ c1, c2, c3 = st.columns([1, 1, 2])
 
 has_key = settings.api_key_configured()
 c1.metric("API Key Status", "Configured" if has_key else "Missing", "X-API-Key Header" if has_key else "Required")
-c2.metric("Target Endpoint", "api.openaq.org/v3", "HTTPS / TLS 1.3")
+c2.metric("Target Endpoint", "OpenAQ REST v3", "api.openaq.org/v3 (TLS 1.3)")
 
 with c3:
     if st.button("🔄 Test Live OpenAQ v3 Connection"):
@@ -118,9 +118,9 @@ except ImportError:
     torch_version = "None"
 
 hw1, hw2, hw3, hw4 = st.columns(4)
-hw1.metric("OS & Architecture", f"{platform.system()} ({platform.machine()})")
-hw2.metric("Python Runtime", platform.python_version())
-hw3.metric("PyTorch Engine", torch_version)
+hw1.metric("OS & Architecture", platform.system(), platform.machine())
+hw2.metric("Python Runtime", platform.python_version(), "64-bit Runtime")
+hw3.metric("PyTorch Engine", torch_version.split("+")[0], "PyTorch 2.x")
 hw4.metric("Acceleration Device", "CUDA GPU" if cuda_avail else "CPU Engine", device_name[:22])
 
 # Storage & Disk Footprint
@@ -188,8 +188,15 @@ if log_files:
     log_file = log_files[-1]
     try:
         with open(log_file, "r", encoding="utf-8", errors="ignore") as f:
-            lines = f.readlines()
-        recent_lines = lines[-30:] if len(lines) >= 30 else lines
+            raw_lines = f.readlines()
+        # Filter out noisy Windows asyncio socket disconnect tracebacks
+        clean_lines = [
+            ln for ln in raw_lines
+            if " | INFO " in ln or " | WARNING " in ln
+        ]
+        if not clean_lines:
+            clean_lines = raw_lines
+        recent_lines = clean_lines[-30:] if len(clean_lines) >= 30 else clean_lines
         log_text = "".join(recent_lines)
         st.caption(f"Showing tail of `{log_file.name}`")
         st.code(log_text if log_text.strip() else "Log file is currently empty.", language="text")

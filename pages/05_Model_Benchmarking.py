@@ -71,45 +71,54 @@ if ml_bench_df.empty:
         except Exception:
             pass
 
-# Collect DL metrics (live checkpoints first, else benchmark CSV)
+# Collect DL metrics (merge recorded h=1 benchmark CSV + live checkpoints)
 dl_rows = []
-dl_source = "live checkpoints"
+dl_sources = []
+dl_csv = settings.PROJECT_ROOT / "experiments" / "results" / "dl_h1_benchmark.csv"
+if dl_csv.exists():
+    try:
+        raw_dl = pd.read_csv(dl_csv)
+        for _, r in raw_dl.iterrows():
+            dl_rows.append({
+                "model": str(r["model"]),
+                "Family": "DL",
+                "Lookback": 24,
+                "Horizon": int(r.get("horizon", 1)),
+                "test_MAE": float(r["MAE"]),
+                "test_RMSE": float(r["RMSE"]),
+                "test_R2": float(r["R2"]),
+                "train_time_s": float(r.get("train_time_s", 0.0)),
+            })
+        dl_sources.append("h=1 benchmark CSV")
+    except Exception:
+        pass
+
 for path in dl_artifacts:
     try:
         import torch
         ckpt = torch.load(path, map_location="cpu", weights_only=False)
         m = ckpt.get("metrics", {})
+        h_val = int(ckpt.get("horizon", 24))
+        m_name = ckpt.get("model_name", path.stem)
+        label = f"{m_name} (h={h_val})" if h_val > 1 else m_name
         dl_rows.append({
-            "model": ckpt.get("model_name", path.stem),
+            "model": label,
             "Family": "DL",
-            "Lookback": ckpt.get("lookback"),
-            "Horizon": ckpt.get("horizon"),
+            "Lookback": int(ckpt.get("lookback", 24)),
+            "Horizon": h_val,
             "test_MAE": m.get("MAE"),
             "test_RMSE": m.get("RMSE"),
             "test_R2": m.get("R2"),
-            "Artifact": path.name,
+            "train_time_s": ckpt.get("train_time_s"),
         })
+        if "live checkpoints" not in dl_sources:
+            dl_sources.append("live checkpoints")
     except Exception:
         pass
 dl_bench_df = pd.DataFrame(dl_rows)
-
-if dl_bench_df.empty:
-    dl_csv = settings.PROJECT_ROOT / "experiments" / "results" / "dl_h1_benchmark.csv"
-    if dl_csv.exists():
-        try:
-            raw_dl = pd.read_csv(dl_csv)
-            dl_bench_df = pd.DataFrame({
-                "model": raw_dl["model"],
-                "Family": "DL",
-                "Horizon": raw_dl.get("horizon", 1),
-                "test_MAE": raw_dl["MAE"],
-                "test_RMSE": raw_dl["RMSE"],
-                "test_R2": raw_dl["R2"],
-                "train_time_s": raw_dl.get("train_time_s"),
-            })
-            dl_source = "recorded h=1 benchmark CSV"
-        except Exception:
-            pass
+if not dl_bench_df.empty:
+    dl_bench_df = dl_bench_df.drop_duplicates(subset=["model", "Horizon"], keep="last").reset_index(drop=True)
+dl_source = " + ".join(dl_sources) if dl_sources else "none"
 
 if ml_bench_df.empty and dl_bench_df.empty:
     st.markdown("""
@@ -134,13 +143,17 @@ st.markdown('<div class="section-header">🏆 Unified Model Leaderboard</div>', 
 
 if frames:
     unified = pd.concat(frames, ignore_index=True)
+    if "Horizon" in unified.columns:
+        unified["Horizon"] = unified["Horizon"].fillna(1).astype(int)
+    if "Lookback" in unified.columns:
+        unified["Lookback"] = unified["Lookback"].fillna(24).astype(int)
     unified = unified.sort_values("test_MAE", ascending=True).reset_index(drop=True)
     unified.insert(0, "Rank", range(1, len(unified) + 1))
 
     # Top KPI summary
     best = unified.iloc[0]
     k1, k2, k3, k4 = st.columns(4)
-    k1.metric("Top Performing Model", f"{best['model']} ({best['Family']})")
+    k1.metric("Top Performing Model", str(best["model"]), f"{best['Family']} Family (Rank #1)")
     k2.metric("Best Test MAE", f"{best['test_MAE']:.3f} µg/m³")
     k3.metric("Best Test RMSE", f"{best['test_RMSE']:.3f} µg/m³")
     k4.metric("Best Test R²", f"{best['test_R2']:.3f}")

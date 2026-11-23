@@ -1,0 +1,41 @@
+dataset,horizon_h,model,test_MAE,test_RMSE,test_R2,test_MAPE
+"Live R K Puram, Delhi",1,LinearRegression,23.803,30.54,0.854,25.32
+"Live R K Puram, Delhi",1,RandomForest,26.534,35.573,0.802,40.28
+"Live R K Puram, Delhi",1,Persistence (lag_1),22.763,31.459,0.845,21.38
+"Live R K Puram, Delhi",1,Seasonal naive (lag_24),74.968,92.417,-0.336,111.46
+"Live R K Puram, Delhi",3,LinearRegression,50.559,62.149,0.396,56.05
+"Live R K Puram, Delhi",3,RandomForest,87.441,102.824,-0.654,121.31
+"Live R K Puram, Delhi",3,Persistence (lag_1),51.28,66.759,0.303,63.28
+"Live R K Puram, Delhi",3,Seasonal naive (lag_24),78.796,98.585,-0.52,134.87
+"Live R K Puram, Delhi",6,LinearRegression,78.892,92.641,-0.33,127.77
+"Live R K Puram, Delhi",6,RandomForest,71.607,93.749,-0.362,127.07
+"Live R K Puram, Delhi",6,Persistence (lag_1),76.946,96.572,-0.445,164.49
+"Live R K Puram, Delhi",6,Seasonal naive (lag_24),84.033,106.016,-0.741,185.24
+"Live R K Puram, Delhi",12,LinearRegression,97.03,113.649,-1.001,195.74
+"Live R K Puram, Delhi",12,RandomForest,62.727,77.709,0.064,102.95
+"Live R K Puram, Delhi",12,Persistence (lag_1),90.63,110.397,-0.888,157.0
+"Live R K Puram, Delhi",12,Seasonal naive (lag_24),88.543,105.659,-0.73,185.79
+"Live R K Puram, Delhi",24,LinearRegression,110.799,130.957,-1.624,215.42
+"Live R K Puram, Delhi",24,RandomForest,71.799,87.644,-0.175,111.34
+"Live R K Puram, Delhi",24,Persistence (lag_1),73.522,91.286,-0.275,113.41
+"Live R K Puram, Delhi",24,Seasonal naive (lag_24),67.122,84.454,-0.091,96.56
+Benchmark Delhi Anand Vihar,1,LinearRegression,9.449,11.947,0.906,13.29
+Benchmark Delhi Anand Vihar,1,RandomForest,9.93,12.402,0.898,14.08
+Benchmark Delhi Anand Vihar,1,Persistence (lag_1),10.652,13.657,0.877,14.36
+Benchmark Delhi Anand Vihar,1,Seasonal naive (lag_24),25.244,31.16,0.359,35.98
+Benchmark Delhi Anand Vihar,3,LinearRegression,15.191,19.147,0.758,21.56
+Benchmark Delhi Anand Vihar,3,RandomForest,16.439,20.821,0.714,23.91
+Benchmark Delhi Anand Vihar,3,Persistence (lag_1),21.602,27.271,0.509,29.59
+Benchmark Delhi Anand Vihar,3,Seasonal naive (lag_24),26.598,32.784,0.29,37.48
+Benchmark Delhi Anand Vihar,6,LinearRegression,18.742,23.989,0.62,29.2
+Benchmark Delhi Anand Vihar,6,RandomForest,20.131,25.853,0.558,30.8
+Benchmark Delhi Anand Vihar,6,Persistence (lag_1),35.329,42.717,-0.206,52.16
+Benchmark Delhi Anand Vihar,6,Seasonal naive (lag_24),34.782,42.5,-0.194,51.37
+Benchmark Delhi Anand Vihar,12,LinearRegression,25.618,31.795,0.331,44.62
+Benchmark Delhi Anand Vihar,12,RandomForest,23.54,29.515,0.424,39.11
+Benchmark Delhi Anand Vihar,12,Persistence (lag_1),49.059,58.101,-1.233,77.16
+Benchmark Delhi Anand Vihar,12,Seasonal naive (lag_24),49.987,59.667,-1.355,81.64
+Benchmark Delhi Anand Vihar,24,LinearRegression,31.461,37.759,0.061,54.61
+Benchmark Delhi Anand Vihar,24,RandomForest,25.113,30.779,0.376,41.77
+Benchmark Delhi Anand Vihar,24,Persistence (lag_1),25.135,31.105,0.363,36.1
+Benchmark Delhi Anand Vihar,24,Seasonal naive (lag_24),34.646,42.282,-0.178,54.23

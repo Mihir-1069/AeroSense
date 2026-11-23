@@ -118,14 +118,14 @@ def generate_markdown_report(
     naaqs_exc = stats.get("naaqs_exceedance_pct", 0.0)
 
     md = []
-    md.append(f"# 🌬️ AeroSense AI — Research & Project Technical Report")
-    md.append(f"**Assigned Project Title**: Air Pollution Pattern Analysis and AQI Forecasting")
-    md.append(f"**Platform Title**: {settings.APP_TITLE}")
-    md.append(f"**Project Team (Batch 2023–2027, Sem 7, CSE-DS)**: Aryan Saini (23030173 / 2301315012), Ayaan Ali (23030175 / 2301315013), Kawalpreet Kaur (23030255 / 2301315019), Mihir Kumar (23030268 / 2301315022)")
-    md.append(f"**Faculty Assigned**: Mr. Abhishek Kumar (QU0125261068)")
-    md.append(f"**Generated**: {now_str}")
-    md.append(f"**Target Station / Region**: `{location_name}` | **Dataset**: `{dataset_name}`")
-    md.append(f"**System Version**: v{settings.APP_VERSION} | **Phase**: India-First Architecture\n")
+    md.append("# 🌬️ AeroSense AI — Research & Project Technical Report\n")
+    md.append("- **Assigned Project Title**: Air Pollution Pattern Analysis and AQI Forecasting")
+    md.append(f"- **Platform Title**: {settings.APP_TITLE}")
+    md.append("- **Project Team (Batch 2023–2027, Sem 7, CSE-DS)**: Aryan Saini (23030173 / 2301315012), Ayaan Ali (23030175 / 2301315013), Kawalpreet Kaur (23030255 / 2301315019), Mihir Kumar (23030268 / 2301315022)")
+    md.append("- **Faculty Assigned**: Mr. Abhishek Kumar (QU0125261068)")
+    md.append(f"- **Generated**: {now_str}")
+    md.append(f"- **Target Station / Region**: `{location_name}` | **Dataset**: `{dataset_name}`")
+    md.append(f"- **System Version**: v{settings.APP_VERSION} | **Phase**: India-First Architecture\n")
     md.append("---")
 
     md.append("\n## 1. Executive Summary")

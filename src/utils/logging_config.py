@@ -27,6 +27,8 @@ def setup_logging(
     root.setLevel(numeric_level)
 
     # Avoid adding duplicate handlers on Streamlit reruns
+    logging.getLogger("asyncio").setLevel(logging.CRITICAL)
+    logging.getLogger("tornado").setLevel(logging.WARNING)
     if root.handlers:
         return logging.getLogger(app_name)
 

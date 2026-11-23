@@ -1,0 +1,13 @@
+dataset,model,n_test,test_MAE,ci95_low,ci95_high
+"Live R K Puram, Delhi",LinearRegression,93,23.802638542285774,15.857220673589362,30.012139574510982
+"Live R K Puram, Delhi",RandomForest,93,26.533645161290316,19.73137156938045,32.37112296466974
+"Live R K Puram, Delhi",Persistence (lag_1),93,22.763440860215052,,
+"Live Talkatora, Lucknow",LinearRegression,94,8.837294040261563,6.630989363816886,10.764989207811603
+"Live Talkatora, Lucknow",RandomForest,94,10.005572163120567,7.89388951051165,12.194323431484289
+"Live Talkatora, Lucknow",Persistence (lag_1),94,11.401063829787235,,
+"Live Zoo Park, Hyderabad",LinearRegression,91,5.679841339340893,4.775696867777472,6.531502820384029
+"Live Zoo Park, Hyderabad",RandomForest,91,7.735645080500889,6.91319491822131,8.208007906976738
+"Live Zoo Park, Hyderabad",Persistence (lag_1),91,6.263736263736264,,
+Benchmark Delhi Anand Vihar,LinearRegression,322,9.448666328481782,8.589694133544665,10.326311128191254
+Benchmark Delhi Anand Vihar,RandomForest,322,9.930462732919253,9.278708586956519,10.718876669254659
+Benchmark Delhi Anand Vihar,Persistence (lag_1),322,10.652049689440993,,

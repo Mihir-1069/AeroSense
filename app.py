@@ -90,7 +90,7 @@ st.markdown(
 c1, c2, c3, c4 = st.columns(4)
 cards = [
     ("🌍", "Data Sources", "OpenAQ API v3", "Real-time & historical"),
-    ("🤖", "ML Models", "5 algorithms", "Linear → XGBoost"),
+    ("🤖", "ML Models", "6 algorithms", "Linear → XGBoost"),
     ("🧠", "DL Models", "4 architectures", "LSTM, GRU, TCN, Transformer"),
     ("📊", "AQI Standards", "2 standards", "CPCB (India) + US EPA"),
 ]
@@ -167,7 +167,7 @@ for i, (num, page, desc) in enumerate(steps):
     with cols[i % 3]:
         st.markdown(
             f"""
-<div class="kpi-card" style="text-align:left; margin-bottom:1rem;">
+<div class="kpi-card" style="text-align:left; margin-bottom:1rem; min-height:115px;">
   <div style="font-size:0.72rem; color:#8B949E;">{num}.</div>
   <div style="font-weight:600; color:#00D4FF; margin:0.3rem 0;">{page}</div>
   <div style="font-size:0.8rem; color:#8B949E;">{desc}</div>
@@ -193,7 +193,7 @@ for col, (name, sid, roll, role) in zip(tcols, team_members):
     with col:
         st.markdown(
             f"""
-<div class="kpi-card" style="text-align:left; margin-bottom:0.8rem;">
+<div class="kpi-card" style="text-align:left; margin-bottom:0.8rem; min-height:122px;">
   <div style="font-weight:700; color:#00D4FF; font-size:0.95rem;">{name}</div>
   <div style="font-size:0.76rem; color:#E6EDF3; margin:0.25rem 0;">ID: <code>{sid}</code> | Roll: <code>{roll}</code></div>
   <div style="font-size:0.74rem; color:#8B949E;">2023 - 2027 · Sem 7 · CSE-DS</div>

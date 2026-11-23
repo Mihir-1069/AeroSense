@@ -323,6 +323,31 @@ def append_chapters_5_to_8_and_backmatter(
         "audits, CPU/CUDA hardware profiling, 7-directory disk footprint tables, cache purging, and live log streaming.",
         qstyles["Bullet"],
     ))
+
+    el.append(sec("5.5 Deployed Interactive Application Screenshots (All 11 Entrypoints)", qstyles))
+    el.append(Paragraph(
+        "Figures 5.1 through 5.11 capture the live rendered interfaces of app.py and all ten analytical pages (pages/01..10) running on "
+        "populated Indian OpenAQ v3 and reference benchmark telemetry.",
+        qstyles["Body"],
+    ))
+    scr_dir = fig_dir.parent / "screens" / "cropped"
+    if not scr_dir.exists():
+        scr_dir = fig_dir.parent / "screens"
+    screen_specs = [
+        ("scr01_home.png", "Fig. 5.1", "AeroSense AI Home Overview (app.py) with API Connection Status, Architecture Cards, and Team Roster"),
+        ("scr02_data_explorer.png", "Fig. 5.2", "Page 01 — Global Data Explorer Displaying Validated OpenAQ v3 / Benchmark Telemetry and Quality Report"),
+        ("scr03_analytics.png", "Fig. 5.3", "Page 02 — Pollution Analytics Showing Temporal Trends, Diurnal Cycles, and Multi-Station Comparisons"),
+        ("scr04_aqi_intelligence.png", "Fig. 5.4", "Page 03 — AQI Intelligence Displaying Dual CPCB (India) and US EPA Gauges and Sub-Index Breakdowns"),
+        ("scr05_forecasting_studio.png", "Fig. 5.5", "Page 04 — Forecasting Studio Displaying Persisted ML Leaderboard, Test Forecast Overlay, and Baselines"),
+        ("scr06_model_benchmarking.png", "Fig. 5.6", "Page 05 — Model Benchmarking Showing Unified 10-Model ML + PyTorch DL Ranked Test Leaderboard"),
+        ("scr07_explainable_ai.png", "Fig. 5.7", "Page 06 — Explainable AI Showing Feature Importance, SHAP Attributions, and Residual Error Diagnostics"),
+        ("scr08_spatial_hotspots.png", "Fig. 5.8", "Page 07 — Spatial & Hotspot Analysis Displaying MapLibre Dark-Matter Station Map and Regional Contrasts"),
+        ("scr09_health_advisory.png", "Fig. 5.9", "Page 08 — Public Health Risk & Advisory Engine Showing WHO/NAAQS Compliance and Cohort Directives"),
+        ("scr10_research_reports.png", "Fig. 5.10", "Page 09 — Academic Research & Technical Reports Export Studio with 1-Click PDF/HTML/ZIP Downloads"),
+        ("scr11_system_diagnostics.png", "Fig. 5.11", "Page 10 — System Diagnostics & Settings Showing OpenAQ v3 Connectivity Audit and Storage Footprint"),
+    ]
+    for s_file, f_no, f_title in screen_specs:
+        add_figure(el, scr_dir, s_file, f_no, f_title, qstyles, width_cm=13.6)
     el.append(PageBreak())
 
     # =========================================================================
@@ -418,6 +443,21 @@ def append_chapters_5_to_8_and_backmatter(
         "Live CPCB AQI Category Distribution Share (A) and Percentage of Monitored Hours Breaching WHO (15 ug/m3) vs Indian NAAQS (60 ug/m3) (B)",
         qstyles, width_cm=14.6,
     )
+    add_figure(
+        el, fig_dir, "fig09_distribution_boxplot.png", "Fig. 6.3",
+        "Empirical PM2.5 Concentration Distributions, Kernel Density Profiles, and Interquartile Box Plots Across Monitored Indian Stations",
+        qstyles, width_cm=14.4,
+    )
+    add_figure(
+        el, fig_dir, "fig10_acf.png", "Fig. 6.4",
+        "Autocorrelation Function (ACF) Profile Across Lags 1 to 72 Hours Demonstrating Strong 1-Hour Inertia and 24/48/72-Hour Diurnal Echoes",
+        qstyles, width_cm=14.4,
+    )
+    add_figure(
+        el, fig_dir, "fig11_diurnal_weekly.png", "Fig. 6.5",
+        "Joint Diurnal Hour-of-Day and Day-of-Week PM2.5 Concentration Profiles Highlighting Morning Inversion and Nocturnal Accumulation Peaks",
+        qstyles, width_cm=14.4,
+    )
     el.append(Paragraph(
         "As shown in Figure 6.1 (Panel B), all three Indian cities exhibit a pronounced bimodal diurnal waveform in Indian Standard Time "
         "(IST = UTC + 05:30). Concentrations peak between 07:00 and 10:00 IST (coinciding with morning rush-hour emissions injected "
@@ -454,13 +494,28 @@ def append_chapters_5_to_8_and_backmatter(
             ["13", "Rolling Mean (24h)", "Reference Baseline", "h = 1", "—", "—", "—", "32.164", "39.170", "-0.015", "<0.01 s"],
             ["14", "Persistence (Lag-1)", "Reference Baseline", "h = 24", "—", "—", "—", "46.077", "55.908", "-1.067", "<0.01 s"],
         ],
-        [0.8 * cm, 3.0 * cm, 2.7 * cm, 1.2 * cm, 1.1 * cm, 1.2 * cm, 1.0 * cm, 1.1 * cm, 1.2 * cm, 1.0 * cm, 1.2 * cm],
+        [0.7 * cm, 2.8 * cm, 2.5 * cm, 1.1 * cm, 1.1 * cm, 1.1 * cm, 1.0 * cm, 1.1 * cm, 1.2 * cm, 1.0 * cm, 1.3 * cm],
         qstyles, font_pt=7.5,
     )
     add_figure(
-        el, fig_dir, "fig2_model_benchmark.png", "Fig. 6.3",
+        el, fig_dir, "fig2_model_benchmark.png", "Fig. 6.6",
         "Held-Out Test Set MAE (A) and R2 Score (B) Across Traditional Machine Learning and PyTorch Deep Sequence Models",
         qstyles, width_cm=14.6,
+    )
+    add_figure(
+        el, fig_dir, "fig20_dl_learning_curves.png", "Fig. 6.7",
+        "PyTorch Deep Sequence Architecture Training and Validation MSE Loss Convergence Curves Across Epochs (LSTM, GRU, TCN, Transformer)",
+        qstyles, width_cm=14.4,
+    )
+    add_figure(
+        el, fig_dir, "fig21_bootstrap_ci.png", "Fig. 6.8",
+        "Non-Parametric Bootstrap 95% Confidence Intervals on Held-Out Test MAE Across All Evaluated Forecasting Models",
+        qstyles, width_cm=14.4,
+    )
+    add_figure(
+        el, fig_dir, "fig25_accuracy_vs_cost.png", "Fig. 6.9",
+        "Pareto Frontier of Held-Out Test Forecasting Accuracy (MAE) Versus Computational Training Latency Across ML and PyTorch DL Families",
+        qstyles, width_cm=14.2,
     )
     el.append(Paragraph(
         "Three scientific conclusions emerge from Table 6.4: (1) Every engineered ML and 1-step DL architecture reduces test MAE by "
@@ -496,13 +551,23 @@ def append_chapters_5_to_8_and_backmatter(
             ["8", "Rolling Mean (24h)", "58.299", "70.728", "0.189", "-5.0% worse than Seasonal", "24h smoothing severely lags sharp smog onset"],
             ["9", "Persistence (24h step)", "61.876", "85.158", "-0.176", "-11.5% worse than Seasonal", "Phase-misaligned across multi-hour horizons"],
         ],
-        [0.8 * cm, 3.0 * cm, 2.0 * cm, 2.0 * cm, 1.3 * cm, 2.6 * cm, 3.8 * cm],
+        [0.7 * cm, 2.8 * cm, 1.9 * cm, 1.9 * cm, 1.2 * cm, 2.6 * cm, 3.8 * cm],
         qstyles, font_pt=7.9,
     )
     add_figure(
-        el, fig_dir, "fig3_forecast_residuals.png", "Fig. 6.4",
+        el, fig_dir, "fig3_forecast_residuals.png", "Fig. 6.10",
         "Held-Out Test Split Forecast vs. Actual Trajectory (A) and Residual Error Distribution Histogram with Bias Diagnostics (B)",
         qstyles, width_cm=14.6,
+    )
+    add_figure(
+        el, fig_dir, "fig22_scatter_qq.png", "Fig. 6.11",
+        "Predicted vs. Observed Parity Scatter Plot (A) and Normal Quantile-Quantile (Q-Q) Residual Tail Audit (B) on Held-Out Test Data",
+        qstyles, width_cm=14.4,
+    )
+    add_figure(
+        el, fig_dir, "fig18_horizon_degradation.png", "Fig. 6.12",
+        "Multi-Horizon Forecasting Skill Decay From h = 1 to h = 24 Hours Comparing Direct ML/DL Models Against Seasonal Naive Baselines",
+        qstyles, width_cm=14.4,
     )
     el.append(Paragraph(
         "Why does OLS Linear Regression (23.803 ug/m3 MAE, R2 = 0.854) outperform XGBoost (33.479 ug/m3 MAE, R2 = 0.714) by nearly "
@@ -522,9 +587,29 @@ def append_chapters_5_to_8_and_backmatter(
         qstyles["Body"],
     ))
     add_figure(
-        el, fig_dir, "fig4_shap_importance.png", "Fig. 6.5",
+        el, fig_dir, "fig4_shap_importance.png", "Fig. 6.13",
         "Top-10 Mean Absolute TreeSHAP Feature Attributions (ug/m3 Impact on Model Output) Across Held-Out Test Instances",
         qstyles, width_cm=13.8,
+    )
+    add_figure(
+        el, fig_dir, "fig15_feature_correlation.png", "Fig. 6.14",
+        "Pairwise Pearson Correlation Matrix Across Engineered Autoregressive Lags, Shifted Rolling Moments, and Cyclical Diurnal Harmonics",
+        qstyles, width_cm=14.2,
+    )
+    add_figure(
+        el, fig_dir, "fig16_feature_importance_compare.png", "Fig. 6.15",
+        "Cross-Method Feature Attribution Concordance Comparing TreeSHAP, Standardized Ridge Coefficients, and Permutation Importance",
+        qstyles, width_cm=14.4,
+    )
+    add_figure(
+        el, fig_dir, "fig17_feature_ablation.png", "Fig. 6.16",
+        "Incremental Feature-Group Ablation Curve Showing Stepwise Test MAE Reduction From Calendar Only to the Full 34-Feature Matrix",
+        qstyles, width_cm=14.2,
+    )
+    add_figure(
+        el, fig_dir, "fig24_station_geography.png", "Fig. 6.17",
+        "Geographic Distribution and Regional Severity Classification Across Monitored Indian Air Quality Reference Nodes",
+        qstyles, width_cm=14.2,
     )
     add_table_block(
         el, "6.6", "Quantitative Top-10 Feature Attribution Comparison Across TreeSHAP, Standardized Ridge, and Permutation Importance",

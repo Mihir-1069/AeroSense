@@ -495,6 +495,11 @@ def append_chapters_1_to_4(
         [3.5 * cm, 2.1 * cm, 2.0 * cm, 1.9 * cm, 1.8 * cm, 3.6 * cm],
         qstyles, font_pt=8.1,
     )
+    add_figure(
+        el, fig_dir, "fig13_aqi_breakpoint_curves.png", "Fig. 3.1",
+        "Piecewise-Linear Sub-Index Transfer Curves Comparing Indian CPCB (2014) and US EPA (2018) PM2.5 Breakpoint Schedules",
+        qstyles, width_cm=14.4,
+    )
 
     el.append(sec("3.4 Leakage-Free 34-Feature Engineering Mathematical Specification", qstyles))
     el.append(Paragraph(
@@ -750,6 +755,16 @@ def append_chapters_1_to_4(
         el, fig_dir, "fig6_uml_system_design.png", "Fig. 4.1",
         "AeroSense AI Level-1 DFD (A), UML Class Architecture (B), Execution Sequence Diagram (C) and Control Flow / Use-Case Design (D)",
         qstyles, width_cm=14.6,
+    )
+    add_figure(
+        el, fig_dir, "fig07_pipeline_flow.png", "Fig. 4.2",
+        "End-to-End Seven-Stage AeroSense AI Data Engineering, Feature Synthesis, Chronological Split, and Model Deployment Pipeline",
+        qstyles, width_cm=14.5,
+    )
+    add_figure(
+        el, fig_dir, "fig08_layer_architecture.png", "Fig. 4.3",
+        "Six-Layer Modular Software Architecture Depicting Package Boundaries Across Config, Data, Domain, ML/DL, XAI, and Streamlit UI",
+        qstyles, width_cm=14.5,
     )
 
     el.append(sec("4.4 Persistent Storage Architecture and Apache Parquet Schemas", qstyles))
